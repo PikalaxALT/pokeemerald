@@ -5,44 +5,6 @@
 
 	.text
 
-	thumb_func_start BlitBitmapRect4BitWithoutColorKey
-@ void BlitBitmapRect4BitWithoutColorKey(struct Bitmap *src, struct Bitmap *dest, u16 srcX, u16 srcY, u16 destX, u16 destY, u16 width, u16 height)
-BlitBitmapRect4BitWithoutColorKey: @ 8002BDC
-	push {r4-r7,lr}
-	mov r7, r8
-	push {r7}
-	sub sp, 0x14
-	ldr r4, [sp, 0x2C]
-	ldr r5, [sp, 0x30]
-	ldr r6, [sp, 0x34]
-	ldr r7, [sp, 0x38]
-	lsls r2, 16
-	lsrs r2, 16
-	lsls r3, 16
-	lsrs r3, 16
-	lsls r4, 16
-	lsrs r4, 16
-	lsls r5, 16
-	lsrs r5, 16
-	lsls r6, 16
-	lsrs r6, 16
-	lsls r7, 16
-	lsrs r7, 16
-	str r4, [sp]
-	str r5, [sp, 0x4]
-	str r6, [sp, 0x8]
-	str r7, [sp, 0xC]
-	movs r4, 0xFF
-	str r4, [sp, 0x10]
-	bl BlitBitmapRect4Bit
-	add sp, 0x14
-	pop {r3}
-	mov r8, r3
-	pop {r4-r7}
-	pop {r0}
-	bx r0
-	thumb_func_end BlitBitmapRect4BitWithoutColorKey
-
 	thumb_func_start BlitBitmapRect4Bit
 @ void BlitBitmapRect4Bit(struct Bitmap *src, struct Bitmap *dest, u16 srcX, u16 srcY, u16 destX, u16 destY, u16 width, u16 height, u8 colorKey)
 BlitBitmapRect4Bit: @ 8002C20
