@@ -189,10 +189,19 @@ struct SaveBlock2
 
         // All below could be a one giant struct
 
-    /*0x64C*/ u8 field_64C[1629];
+    /*0x64C*/ u8 field_64C[1628];
+    /*0xCA8*/ u8 unk_ca8;
     /*0xCA9*/ u8 frontierChosenLvl : 2;
-    /*0xCA9*/ u8 field_CA9_a : 6;
-    /*0xCAA*/ u8 field_CAA[368];
+    /*0xCA9*/ u8 field_CA9_a : 1;
+    /*0xCA9*/ u8 field_CA9_b : 1;
+    /*0xCA9*/ u8 field_CA9_c : 4;
+    /*0xCAA*/ u8 field_CAA[8];
+    /*0xCB2*/ u16 unk_cb2;
+    /*0xCB4*/ u8 field_CB4[0x28];
+    /*0xcdc*/ u32 unk_cdc;
+    /*0xce0*/ u8 filler_ce0[0x2c];
+    /*0xd0c*/ u16 unk_d0c[4][2]; // FIXME
+    /*0xd1c*/ u8 filler_d1c[0xFE];
     /*0xE1A*/ u16 battlePyramidFloor; // possibly?
     /*0xE1C*/ u8 field_E1C[16];
     /*0xE2C*/ struct PyramidBag pyramidBag;

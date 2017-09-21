@@ -52,5 +52,6 @@
 
 #define VAR_0x40BC                 0x40BC
 #define VAR_0x40C2                 0x40C2
+#define VAR_0x40CE                 0x40CE
 
 #endif // GUARD_VARS_H
