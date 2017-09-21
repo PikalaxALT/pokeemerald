@@ -5,21 +5,6 @@
 
 	.text
 
-	thumb_func_start sub_818E9AC
-sub_818E9AC: @ 818E9AC
-	push {lr}
-	ldr r1, =gUnknown_0860D090
-	ldr r0, =gSpecialVar_0x8004
-	ldrh r0, [r0]
-	lsls r0, 2
-	adds r0, r1
-	ldr r0, [r0]
-	bl _call_via_r0
-	pop {r0}
-	bx r0
-	.pool
-	thumb_func_end sub_818E9AC
-
 	thumb_func_start sub_818E9CC
 sub_818E9CC: @ 818E9CC
 	push {r4-r7,lr}

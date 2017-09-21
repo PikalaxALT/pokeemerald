@@ -1,10 +1,6 @@
 	.include "asm/macros.inc"
 	.include "constants/constants.inc"
 
-    @ This section was decompiled in battle_dome_cards.
-    @ On its merge, this section should be deleted.
-    @ This section contains three objects and accounts for 28 bytes.
-
 	.section .rodata
 
 gUnknown_0860B358:: @ 860B358
