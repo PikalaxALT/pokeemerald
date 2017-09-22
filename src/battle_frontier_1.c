@@ -3,8 +3,10 @@
 //
 
 #include "global.h"
+#include "malloc.h"
 #include "event_data.h"
 #include "party_menu.h"
+#include "battle.h"
 #include "rom4.h"
 
 extern u16 gTrainerBattleOpponent_A;
@@ -212,3 +214,49 @@ void sub_818ED28(void)
             break;
     }
 }
+
+//void sub_818F02C(void)
+//{
+//    int i;
+//    int j;
+//    u32 sp08[3] = {};
+//    void *sp18 = AllocZeroed(0x20);
+//    void *sp1c = AllocZeroed(0x18);
+//    u16 unk_r4;
+//
+//    gSaveBlock2Ptr->unk_d0a = gSaveBlock2Ptr->frontierChosenLvl + 1;
+//    gSaveBlock2Ptr->unk_d0b = VarGet(VAR_0x40CE) + 1;
+//    gSaveBlock2Ptr->unk_d24_0 = -1;
+//    gSaveBlock2Ptr->unk_d24_A = FALSE;
+//    gSaveBlock2Ptr->unk_d24_B = 0;
+//    gSaveBlock2Ptr->unk_d24_D = 0;
+//#define bfParty ((struct Pokemon *)(&gBattleScripting.atk49_state))
+//    for (i = 0; i < 3; i ++)
+//    {
+//        gSaveBlock2Ptr->unk_d64[i] = GetMonData(&bfParty[gSaveBlock2Ptr->unk_caa[i]], MON_DATA_SPECIES, NULL);
+//        for (j = 0; j < 4; j ++)
+//        {
+//            gSaveBlock2Ptr->frontier_efc[i].moves[j] = GetMonData(&bfParty[gSaveBlock2Ptr->unk_caa[i]], MON_DATA_MOVE1 + j, NULL);
+//        }
+//        for (j = 0; j < 6; j ++)
+//        {
+//            gSaveBlock2Ptr->frontier_efc[i].evs[j] = GetMonData(&bfParty[gSaveBlock2Ptr->unk_caa[i]], MON_DATA_HP_EV + j, NULL);
+//        }
+//        gSaveBlock2Ptr->frontier_efc[i].nature = GetNature(&bfParty[gSaveBlock2Ptr->unk_caa[i]]);
+//    }
+//    for (i = 1; i < 16; i ++)
+//    {
+//        if (i > 5)
+//        {
+//            unk_r4 = sub_8162548(sub_81A39C4(), 0);
+//            if (1 < i)
+//            {
+//                while (gSaveBlock2Ptr->unk_d24_0 != unk_r4)
+//                {
+//
+//                }
+//            }
+//        }
+//    }
+//#undef bfParty
+//}

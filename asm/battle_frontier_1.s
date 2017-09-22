@@ -72,7 +72,7 @@ sub_818F02C: @ 818F02C
 	movs r7, 0
 	mov r10, r7
 	mov r8, r4
-	ldr r0, =gBattleScripting + 0x14
+	ldr r0, =gBattleScripting + 0x14 // atk49_state
 	mov r9, r0
 	movs r4, 0
 _0818F0BA:

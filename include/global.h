@@ -195,7 +195,7 @@ struct SaveBlock2
     /*0xCA9*/ u8 field_CA9_a : 1;
     /*0xCA9*/ u8 field_CA9_b : 1;
     /*0xCA9*/ u8 field_CA9_c : 4;
-    /*0xCAA*/ u8 field_CAA[6];
+    /*0xCAA*/ u16 unk_caa[3];
     /*0xCB0*/ u16 unk_cb0;
     /*0xCB2*/ u16 unk_cb2;
     /*0xCB4*/ u8 field_CB4[0x28];
@@ -213,7 +213,14 @@ struct SaveBlock2
     /*0xd0a*/ u8 unk_d0a;
     /*0xd0b*/ u8 unk_d0b;
     /*0xd0c*/ u16 unk_d0c[2][2]; // FIXME
-    /*0xd1c*/ u8 filler_d14[0x102];
+    /*0xd14*/ u8 filler_d14[0x10];
+    /*0xd24*/ u16 unk_d24_0:10;
+    /*0xd25*/ u16 unk_d24_A:1;
+    /*0xd25*/ u16 unk_d24_B:2;
+    /*0xd25*/ u16 unk_d24_D:3;
+    /*0xd26*/ u8 filler_d26[0x3e];
+    /*0xd64*/ u16 unk_d64[3];
+    /*0xd6a*/ u8 filler_d6a[0xb0];
     /*0xE1A*/ u16 battlePyramidFloor; // possibly?
     /*0xE1C*/ u8 field_E1C[16];
     /*0xE2C*/ struct PyramidBag pyramidBag;
@@ -225,7 +232,13 @@ struct SaveBlock2
     /*0xEE1*/ u8 field_EE1;
     /*0xEE2*/ u8 field_EE2[7];
     /*0xEE9*/ u8 field_EE9;
-    /*0xEEA*/ u8 field_EEA[66];
+    /*0xEEA*/ u8 field_EEA[0x12];
+    /*0xefc*/ struct {
+        u16 moves[4];
+        u8 evs[6];
+        u8 nature;
+    } frontier_efc[3];
+    /*0xf26*/ u8 filler_f26[6];
     // sizeof=0xF2C
 };
 
