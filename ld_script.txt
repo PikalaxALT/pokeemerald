@@ -255,6 +255,7 @@ SECTIONS {
         asm/battle_tent.o(.text);
         asm/unk_text_util_2.o(.text);
         src/multiboot.o(.text);
+        src/battle_controller_player_partner.o(.text);
         asm/battle_controller_player_partner.o(.text);
         asm/fldeff_groundshake.o(.text);
         asm/fossil_specials.o(.text);
@@ -389,6 +390,7 @@ SECTIONS {
         data/party_menu.o(.rodata);
         data/battle_tent.o(.rodata);
         data/unk_text_util_2.o(.rodata);
+        src/battle_controller_player_partner.o(.rodata);
         data/battle_controller_player_partner.o(.rodata);
         data/fossil_special_fldeff_groundshake.o(.rodata);
         src/berry_fix_program.o(.rodata);

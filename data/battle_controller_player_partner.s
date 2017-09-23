@@ -3,26 +3,6 @@
 
 	.section .rodata
 
-gUnknown_08617128:: @ 8617128
-    .4byte gUnknown_08DD87C0
-    .4byte gUnknown_08DD8EE0
-    .4byte gUnknown_08DD8780
-    .4byte gUnknown_08DD90E0
-    .4byte gUnknown_08DD9718
-    .4byte gUnknown_08DD9080
-    .4byte gUnknown_08DD98B4
-    .4byte gUnknown_08DD9E58
-    .4byte gUnknown_08DD9874
-    .4byte gUnknown_08DDA02C
-    .4byte gUnknown_08DDA63C
-    .4byte gUnknown_08DD9FEC
-    .4byte gUnknown_08DDA840
-    .4byte gUnknown_08DDAE40
-    .4byte gUnknown_08DDA800
-    .4byte gUnknown_08DDB020
-    .4byte gUnknown_08DDB2C4
-    .4byte gUnknown_08DDAFE0
-
 	.align 2
 gPlayerPartnerBufferCommands:: @ 8617170
 	.4byte dp01t_00_3_getattr
@@ -84,7 +64,7 @@ gPlayerPartnerBufferCommands:: @ 8617170
 	.4byte nullsub_128
 
 	.align 2
-    @ apparently unused data
+	@ apparently unused data
 	.byte 0x83, 0x4d, 0xf3, 0x5f, 0x6f, 0x4f, 0xeb, 0x3e
 	.byte 0x67, 0x2e, 0x10, 0x46, 0x8c, 0x3d, 0x28, 0x35
 	.byte 0xc5, 0x2c, 0x15, 0x7f, 0xb5, 0x56, 0x9d, 0x53
