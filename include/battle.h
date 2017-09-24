@@ -676,5 +676,9 @@ struct BattleSpritesGfx
 };
 
 extern struct BattleSpritesGfx* gBattleSpritesGfx;
+extern u8 gActiveBank;
+extern u32 gBattleExecBuffer[];
+extern u8 gBattleBufferA[][0x200];
+extern void (*gBattleBankFunc[])(void);
 
 #endif // GUARD_BATTLE_H
