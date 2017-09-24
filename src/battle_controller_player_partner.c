@@ -6,6 +6,7 @@
 #include "util.h"
 #include "sprite.h"
 #include "task.h"
+#include "songs.h"
 #include "sound.h"
 #include "pokemon.h"
 #include "text.h"
@@ -73,6 +74,7 @@ void nullsub_128(void);
 void sub_81BB628(u8);
 void sub_81BB740(u8);
 void sub_81BB414(u8);
+void sub_81BB4E4(u8);
 
 extern const u16 gUnknown_08DD87C0[];
 extern const u16 gUnknown_08DD8EE0[];
@@ -359,4 +361,26 @@ void sub_81BB29C(u8 taskId)
     {
         gTasks[taskId].func = sub_81BB414;
     }
+}
+
+void sub_81BB414(u8 taskId)
+{
+    u8 partyIdx;
+    int deltaExp;
+    u8 expTaskBank;
+    u8 level;
+    u16 species;
+    u32 exp;
+    u32 nlExp;
+
+    partyIdx = gTasks[taskId].data[0];
+    deltaExp = gTasks[taskId].data[1];
+    expTaskBank = gTasks[taskId].data[2];
+    level = GetMonData(&gPlayerParty[partyIdx], MON_DATA_LEVEL);
+    species = GetMonData(&gPlayerParty[partyIdx], MON_DATA_SPECIES);
+    exp = GetMonData(&gPlayerParty[partyIdx], MON_DATA_EXP) - gExperienceTables[gBaseStats[species].growthRate][level];
+    nlExp = gExperienceTables[gBaseStats[species].growthRate][level + 1] - gExperienceTables[gBaseStats[species].growthRate][level];
+    sub_807294C(expTaskBank, gHealthBoxesIds[expTaskBank], nlExp, exp, -deltaExp);
+    PlaySE(SE_EXP);
+    gTasks[taskId].func = sub_81BB4E4;
 }
