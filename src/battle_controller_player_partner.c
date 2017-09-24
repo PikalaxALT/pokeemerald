@@ -270,3 +270,28 @@ void sub_81BB02C(void)
         gBattleBankFunc[gActiveBank] = sub_81BAF48;
     }
 }
+
+void sub_81BB1D4(void)
+{
+    if (gSprites[gBankSpriteIds[gActiveBank]].animEnded && gSprites[gBankSpriteIds[gActiveBank]].pos2.x == 0)
+    {
+        PlayerPartnerBufferExecCompleted();
+    }
+}
+
+void bx_t3_healthbar_update(void)
+{
+    s16 v0;
+
+    v0 = sub_8074AA0(gActiveBank, gHealthBoxesIds[gActiveBank], 0, 0);
+    sub_80729D0(gHealthBoxesIds[gActiveBank]);
+    if (v0 != -1)
+    {
+        healthbar_draw_hp(gHealthBoxesIds[gActiveBank], v0, 0);
+    }
+    else
+    {
+        sub_805E990(&gPlayerParty[gBattlePartyID[gActiveBank]], gActiveBank);
+        PlayerPartnerBufferExecCompleted();
+    }
+}

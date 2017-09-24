@@ -1159,8 +1159,8 @@ _08072C1C:
 	.pool
 	thumb_func_end healthbar_draw_level
 
-	thumb_func_start heathbar_draw_hp
-heathbar_draw_hp: @ 8072C38
+	thumb_func_start healthbar_draw_hp
+healthbar_draw_hp: @ 8072C38
 	push {r4-r7,lr}
 	mov r7, r10
 	mov r6, r9
@@ -1367,7 +1367,7 @@ _08072DEA:
 	pop {r0}
 	bx r0
 	.pool
-	thumb_func_end heathbar_draw_hp
+	thumb_func_end healthbar_draw_hp
 
 	thumb_func_start sub_8072E0C
 sub_8072E0C: @ 8072E0C
@@ -4537,7 +4537,7 @@ _080748D4:
 	asrs r1, 16
 	adds r0, r6, 0
 	movs r2, 0
-	bl heathbar_draw_hp
+	bl healthbar_draw_hp
 _080748EE:
 	cmp r7, 0x2
 	beq _080748F6
@@ -4552,7 +4552,7 @@ _080748F6:
 	asrs r1, 16
 	adds r0, r6, 0
 	movs r2, 0x1
-	bl heathbar_draw_hp
+	bl healthbar_draw_hp
 _0807490C:
 	cmp r7, 0x5
 	beq _08074914

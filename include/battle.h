@@ -715,12 +715,15 @@ extern struct {
 extern u8 gHealthBoxesIds[];
 extern u32 gBattleTypeFlags;
 extern u8 gUnknown_03005D7C[];
+extern u16 gBattlePartyID[];
 
 void nullsub_25(u32);
 bool8 battle_type_is_double(void);
 void healthbar_draw_field_maybe(u8, struct Pokemon *, u32);
 void sub_8076918(u8);
 void sub_80729D0(u8);
-extern u16 gBattlePartyID[];
+s16 sub_8074AA0(u8, u8, u8, u8);
+void healthbar_draw_hp(u8, s16, u8);
+void sub_805E990(struct Pokemon *, u8);
 
 #endif // GUARD_BATTLE_H
