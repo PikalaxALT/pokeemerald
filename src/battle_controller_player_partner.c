@@ -5,6 +5,7 @@
 #include "global.h"
 #include "util.h"
 #include "sprite.h"
+#include "sound.h"
 #include "battle.h"
 
 void PlayerPartnerBufferRunCommand(void);
@@ -215,5 +216,35 @@ void sub_81BAF00(void)
     {
         gUnknown_020244D0[1][gActiveBank].unk9 = 0;
         PlayerPartnerBufferExecCompleted();
+    }
+}
+
+void sub_81BAF48(void)
+{
+    bool8 flag;
+
+    flag = FALSE;
+    if (!battle_type_is_double() || (battle_type_is_double() && gBattleTypeFlags & 0x40))
+    {
+        if (gSprites[gHealthBoxesIds[gActiveBank]].callback == SpriteCallbackDummy)
+        {
+            flag = TRUE;
+        }
+    }
+    else
+    {
+        if (gSprites[gHealthBoxesIds[gActiveBank]].callback == SpriteCallbackDummy && gSprites[gHealthBoxesIds[gActiveBank ^ 0x02]].callback == SpriteCallbackDummy)
+        {
+            flag = TRUE;
+        }
+    }
+    if (IsCryPlayingOrClearCrySongs())
+    {
+        flag = FALSE;
+    }
+    if (flag)
+    {
+        gUnknown_020244D0[1][gActiveBank].unk9 = 3;
+        gBattleBankFunc[gActiveBank] = sub_81BAF00;
     }
 }

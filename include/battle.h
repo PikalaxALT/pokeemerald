@@ -705,7 +705,10 @@ extern u8 gBattleBufferA[][0x200];
 extern void (*gBattleBankFunc[])(void);
 extern u8 gBankSpriteIds[];
 extern struct Struct2017810 **gUnknown_020244D0;
+extern u8 gHealthBoxesIds[];
+extern u32 gBattleTypeFlags;
 
 void nullsub_25(u32);
+bool8 battle_type_is_double(void);
 
 #endif // GUARD_BATTLE_H
