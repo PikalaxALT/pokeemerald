@@ -5,20 +5,6 @@
 
 	.text
 
-	thumb_func_start sub_81BB284
-sub_81BB284: @ 81BB284
-	push {lr}
-	movs r0, 0
-	bl IsTextPrinterActive
-	lsls r0, 16
-	cmp r0, 0
-	bne _081BB296
-	bl PlayerPartnerBufferExecCompleted
-_081BB296:
-	pop {r0}
-	bx r0
-	thumb_func_end sub_81BB284
-
 	thumb_func_start sub_81BB29C
 sub_81BB29C: @ 81BB29C
 	push {r4-r7,lr}

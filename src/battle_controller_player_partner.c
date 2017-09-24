@@ -7,6 +7,7 @@
 #include "sprite.h"
 #include "sound.h"
 #include "pokemon.h"
+#include "text.h"
 #include "battle.h"
 
 void PlayerPartnerBufferRunCommand(void);
@@ -179,7 +180,7 @@ void SetBankFuncToPlayerPartnerBufferRunCommand(void)
 
 void PlayerPartnerBufferRunCommand(void)
 {
-    if (gBattleExecBuffer[0] & gBitTable[gActiveBank])
+    if (gBattleExecBuffer & gBitTable[gActiveBank])
     {
         if (gBattleBufferA[gActiveBank][0] <= 0x38)
         {
@@ -292,6 +293,14 @@ void bx_t3_healthbar_update(void)
     else
     {
         sub_805E990(&gPlayerParty[gBattlePartyID[gActiveBank]], gActiveBank);
+        PlayerPartnerBufferExecCompleted();
+    }
+}
+
+void sub_81BB284(void)
+{
+    if (!IsTextPrinterActive(0))
+    {
         PlayerPartnerBufferExecCompleted();
     }
 }
