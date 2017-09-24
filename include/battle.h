@@ -725,5 +725,6 @@ void sub_80729D0(u8);
 s16 sub_8074AA0(u8, u8, u8, u8);
 void healthbar_draw_hp(u8, s16, u8);
 void sub_805E990(struct Pokemon *, u8);
+void dp01_build_cmdbuf_x21_a_bb(u8, u8, u16);
 
 #endif // GUARD_BATTLE_H

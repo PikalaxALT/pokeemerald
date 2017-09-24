@@ -5,6 +5,7 @@
 #include "global.h"
 #include "util.h"
 #include "sprite.h"
+#include "task.h"
 #include "sound.h"
 #include "pokemon.h"
 #include "text.h"
@@ -69,6 +70,9 @@ void sub_81BE604(void);
 void sub_81BE610(void);
 void sub_81BE61C(void);
 void nullsub_128(void);
+void sub_81BB628(u8);
+void sub_81BB740(u8);
+void sub_81BB414(u8);
 
 extern const u16 gUnknown_08DD87C0[];
 extern const u16 gUnknown_08DD8EE0[];
@@ -302,5 +306,57 @@ void sub_81BB284(void)
     if (!IsTextPrinterActive(0))
     {
         PlayerPartnerBufferExecCompleted();
+    }
+}
+
+void sub_81BB29C(u8 taskId)
+{
+    u8 partyIdx;
+    u8 expTaskBank;
+    s16 deltaExp;
+    u16 species;
+    u8 level;
+    u32 exp; // sp+4
+    u32 nlExp; // sp+0
+    u8 oldActiveBank;
+
+    partyIdx = gTasks[taskId].data[0];
+    expTaskBank = gTasks[taskId].data[2];
+    deltaExp = gTasks[taskId].data[1];
+    if (battle_type_is_double() == TRUE || partyIdx != gBattlePartyID[expTaskBank])
+    {
+        species = GetMonData(&gPlayerParty[partyIdx], MON_DATA_SPECIES);
+        level = GetMonData(&gPlayerParty[partyIdx], MON_DATA_LEVEL);
+        exp = GetMonData(&gPlayerParty[partyIdx], MON_DATA_EXP);
+        nlExp = gExperienceTables[gBaseStats[species].growthRate][level + 1];
+        if (exp + deltaExp >= nlExp)
+        {
+            SetMonData(&gPlayerParty[partyIdx], MON_DATA_EXP, (u8 *)&nlExp);
+            CalculateMonStats(&gPlayerParty[partyIdx]);
+            deltaExp -= nlExp - exp;
+            oldActiveBank = gActiveBank;
+            gActiveBank = expTaskBank;
+            dp01_build_cmdbuf_x21_a_bb(0x01, 0x0B, deltaExp);
+            gActiveBank = oldActiveBank;
+            if (battle_type_is_double() == TRUE && (partyIdx == gBattlePartyID[expTaskBank] || partyIdx == gBattlePartyID[expTaskBank ^ 0x02]))
+            {
+                gTasks[taskId].func = sub_81BB628;
+            }
+            else
+            {
+                gTasks[taskId].func = sub_81BB740;
+            }
+        }
+        else
+        {
+            exp += deltaExp;
+            SetMonData(&gPlayerParty[partyIdx], MON_DATA_EXP, (u8 *)&exp);
+            gBattleBankFunc[expTaskBank] = sub_81BB284;
+            DestroyTask(taskId);
+        }
+    }
+    else
+    {
+        gTasks[taskId].func = sub_81BB414;
     }
 }
