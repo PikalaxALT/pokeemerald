@@ -4,6 +4,7 @@
 
 #include "global.h"
 #include "util.h"
+#include "sprite.h"
 #include "battle.h"
 
 void PlayerPartnerBufferRunCommand(void);
@@ -189,3 +190,21 @@ void PlayerPartnerBufferRunCommand(void)
     }
 }
 
+void sub_81BAE60(void)
+{
+    if (gSprites[gBankSpriteIds[gActiveBank]].callback == SpriteCallbackDummy)
+    {
+        PlayerPartnerBufferExecCompleted();
+    }
+}
+
+void sub_81BAE98(void)
+{
+    if (gSprites[gBankSpriteIds[gActiveBank]].callback == SpriteCallbackDummy)
+    {
+        nullsub_25(0);
+        FreeSpriteOamMatrix(&gSprites[gBankSpriteIds[gActiveBank]]);
+        DestroySprite(&gSprites[gBankSpriteIds[gActiveBank]]);
+        PlayerPartnerBufferExecCompleted();
+    }
+}

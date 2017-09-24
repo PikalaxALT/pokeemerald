@@ -680,5 +680,8 @@ extern u8 gActiveBank;
 extern u32 gBattleExecBuffer[];
 extern u8 gBattleBufferA[][0x200];
 extern void (*gBattleBankFunc[])(void);
+extern u8 gBankSpriteIds[];
+
+void nullsub_25(u32);
 
 #endif // GUARD_BATTLE_H
