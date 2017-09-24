@@ -208,3 +208,12 @@ void sub_81BAE98(void)
         PlayerPartnerBufferExecCompleted();
     }
 }
+
+void sub_81BAF00(void)
+{
+    if (--gUnknown_020244D0[1][gActiveBank].unk9 == 0xFF)
+    {
+        gUnknown_020244D0[1][gActiveBank].unk9 = 0;
+        PlayerPartnerBufferExecCompleted();
+    }
+}

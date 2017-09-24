@@ -666,6 +666,29 @@ struct BattleScripting
 
 extern struct BattleScripting gBattleScripting;
 
+struct Struct2017810 // ported from Ruby
+{
+    u8 unk0_0:1;
+    u8 unk0_1:1;
+    u8 unk0_2:1;
+    u8 unk0_3:1;
+    u8 unk0_4:1;
+    u8 unk0_5:1;
+    u8 unk0_6:1;
+    u8 unk0_7:1;
+    u8 unk1_0:1;
+    u8 unk1_1:5;
+    u8 unk2;
+    u8 unk3;
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 unk7;
+    u8 unk8;
+    u8 unk9;
+    u8 fillerA[2];
+};
+
 #include "sprite.h"
 
 struct BattleSpritesGfx
@@ -681,6 +704,7 @@ extern u32 gBattleExecBuffer[];
 extern u8 gBattleBufferA[][0x200];
 extern void (*gBattleBankFunc[])(void);
 extern u8 gBankSpriteIds[];
+extern struct Struct2017810 **gUnknown_020244D0;
 
 void nullsub_25(u32);
 
