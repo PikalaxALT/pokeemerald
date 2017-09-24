@@ -6,6 +6,7 @@
 #include "util.h"
 #include "sprite.h"
 #include "sound.h"
+#include "pokemon.h"
 #include "battle.h"
 
 void PlayerPartnerBufferRunCommand(void);
@@ -212,9 +213,9 @@ void sub_81BAE98(void)
 
 void sub_81BAF00(void)
 {
-    if (--gUnknown_020244D0[1][gActiveBank].unk9 == 0xFF)
+    if (--gUnknown_020244D0->unk_4[gActiveBank].unk9 == 0xFF)
     {
-        gUnknown_020244D0[1][gActiveBank].unk9 = 0;
+        gUnknown_020244D0->unk_4[gActiveBank].unk9 = 0;
         PlayerPartnerBufferExecCompleted();
     }
 }
@@ -244,7 +245,28 @@ void sub_81BAF48(void)
     }
     if (flag)
     {
-        gUnknown_020244D0[1][gActiveBank].unk9 = 3;
+        gUnknown_020244D0->unk_4[gActiveBank].unk9 = 3;
         gBattleBankFunc[gActiveBank] = sub_81BAF00;
+    }
+}
+
+void sub_81BB02C(void)
+{
+    if (!gUnknown_020244D0->unk_4[gActiveBank].unk0_3 && !gUnknown_020244D0->unk_4[gActiveBank ^ 0x02].unk0_3 && gSprites[gUnknown_03005D7C[gActiveBank]].callback == SpriteCallbackDummy && gSprites[gBankSpriteIds[gActiveBank]].callback == SpriteCallbackDummy && ++ gUnknown_020244D0->unk_4[gActiveBank].unk9 != 1)
+    {
+        gUnknown_020244D0->unk_4[gActiveBank].unk9 = 0;
+        if (battle_type_is_double() && !(gBattleTypeFlags & 0x40))
+        {
+            DestroySprite(&gSprites[gUnknown_03005D7C[gActiveBank ^ 0x02]]);
+            healthbar_draw_field_maybe(gHealthBoxesIds[gActiveBank ^ 0x02], &gPlayerParty[gBattlePartyID[gActiveBank ^ 0x02]], 0);
+            sub_8076918(gActiveBank ^ 0x02);
+            sub_80729D0(gHealthBoxesIds[gActiveBank ^ 0x02]);
+        }
+        DestroySprite(&gSprites[gUnknown_03005D7C[gActiveBank]]);
+        healthbar_draw_field_maybe(gHealthBoxesIds[gActiveBank], &gPlayerParty[gBattlePartyID[gActiveBank]], 0);
+        sub_8076918(gActiveBank);
+        sub_80729D0(gHealthBoxesIds[gActiveBank]);
+        gUnknown_020244D0->unk_8->unk9_0 = FALSE;
+        gBattleBankFunc[gActiveBank] = sub_81BAF48;
     }
 }
