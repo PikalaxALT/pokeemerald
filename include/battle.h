@@ -727,5 +727,6 @@ void healthbar_draw_hp(u8, s16, u8);
 void sub_805E990(struct Pokemon *, u8);
 void dp01_build_cmdbuf_x21_a_bb(u8, u8, u16);
 void sub_807294C(u8, u8, u32, u32, int);
+void move_anim_start_t4(u8, u8, u8, u8);
 
 #endif // GUARD_BATTLE_H

@@ -5,52 +5,6 @@
 
 	.text
 
-	thumb_func_start sub_81BB628
-sub_81BB628: @ 81BB628
-	push {r4-r6,lr}
-	lsls r0, 24
-	lsrs r5, r0, 24
-	ldr r1, =gTasks
-	lsls r0, r5, 2
-	adds r0, r5
-	lsls r0, 3
-	adds r0, r1
-	ldrb r4, [r0, 0xC]
-	ldrb r6, [r0, 0x8]
-	bl battle_type_is_double
-	lsls r0, 24
-	lsrs r0, 24
-	cmp r0, 0x1
-	bne _081BB65C
-	ldr r1, =gBattlePartyID
-	movs r0, 0x2
-	adds r2, r4, 0
-	eors r2, r0
-	lsls r0, r2, 1
-	adds r0, r1
-	ldrh r0, [r0]
-	cmp r6, r0
-	bne _081BB65C
-	adds r4, r2, 0
-_081BB65C:
-	adds r0, r4, 0
-	adds r1, r4, 0
-	adds r2, r4, 0
-	movs r3, 0
-	bl move_anim_start_t4
-	ldr r0, =gTasks
-	lsls r1, r5, 2
-	adds r1, r5
-	lsls r1, 3
-	adds r1, r0
-	ldr r0, =sub_81BB688
-	str r0, [r1]
-	pop {r4-r6}
-	pop {r0}
-	bx r0
-	.pool
-	thumb_func_end sub_81BB628
-
 	thumb_func_start sub_81BB688
 sub_81BB688: @ 81BB688
 	push {r4-r7,lr}

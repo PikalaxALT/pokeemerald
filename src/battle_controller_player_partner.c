@@ -76,6 +76,7 @@ void sub_81BB628(u8);
 void sub_81BB740(u8);
 void sub_81BB414(u8);
 void sub_81BB4E4(u8);
+void sub_81BB688(u8);
 
 extern const u16 gUnknown_08DD87C0[];
 extern const u16 gUnknown_08DD8EE0[];
@@ -436,4 +437,19 @@ void sub_81BB4E4(u8 taskId)
             }
         }
     }
+}
+
+void sub_81BB628(u8 taskId)
+{
+    u8 partyIdx;
+    u8 expTaskBank;
+
+    expTaskBank = gTasks[taskId].data[2];
+    partyIdx = gTasks[taskId].data[0];
+    if (battle_type_is_double() == TRUE && partyIdx == gBattlePartyID[expTaskBank ^ 0x02])
+    {
+        expTaskBank ^= 2;
+    }
+    move_anim_start_t4(expTaskBank, expTaskBank, expTaskBank, 0);
+    gTasks[taskId].func = sub_81BB688;
 }
