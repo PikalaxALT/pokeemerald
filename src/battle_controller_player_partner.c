@@ -3,6 +3,7 @@
 //
 
 #include "global.h"
+#include "m4a.h"
 #include "util.h"
 #include "sprite.h"
 #include "task.h"
@@ -333,7 +334,7 @@ void sub_81BB29C(u8 taskId)
         nlExp = gExperienceTables[gBaseStats[species].growthRate][level + 1];
         if (exp + deltaExp >= nlExp)
         {
-            SetMonData(&gPlayerParty[partyIdx], MON_DATA_EXP, (u8 *)&nlExp);
+            SetMonData(&gPlayerParty[partyIdx], MON_DATA_EXP, &nlExp);
             CalculateMonStats(&gPlayerParty[partyIdx]);
             deltaExp -= nlExp - exp;
             oldActiveBank = gActiveBank;
@@ -352,7 +353,7 @@ void sub_81BB29C(u8 taskId)
         else
         {
             exp += deltaExp;
-            SetMonData(&gPlayerParty[partyIdx], MON_DATA_EXP, (u8 *)&exp);
+            SetMonData(&gPlayerParty[partyIdx], MON_DATA_EXP, &exp);
             gBattleBankFunc[expTaskBank] = sub_81BB284;
             DestroyTask(taskId);
         }
@@ -383,4 +384,56 @@ void sub_81BB414(u8 taskId)
     sub_807294C(expTaskBank, gHealthBoxesIds[expTaskBank], nlExp, exp, -deltaExp);
     PlaySE(SE_EXP);
     gTasks[taskId].func = sub_81BB4E4;
+}
+
+void sub_81BB4E4(u8 taskId)
+{
+    u8 partyIdx;
+    s16 deltaExp;
+    u8 expTaskBank;
+    s16 r4;
+    u8 level;
+    int exp;
+    u16 species;
+    int nlExp;
+    u8 oldBank;
+
+    if (gTasks[taskId].data[10] < 13)
+    {
+        gTasks[taskId].data[10] ++;
+    }
+    else
+    {
+        partyIdx = gTasks[taskId].data[0];
+        deltaExp = gTasks[taskId].data[1];
+        expTaskBank = gTasks[taskId].data[2];
+        r4 = sub_8074AA0(expTaskBank, gHealthBoxesIds[expTaskBank], 1, 0);
+        sub_80729D0(gHealthBoxesIds[expTaskBank]);
+        if (r4 == -1)
+        {
+            m4aSongNumStop(SE_EXP);
+            level = GetMonData(&gPlayerParty[partyIdx], MON_DATA_LEVEL);
+            exp = GetMonData(&gPlayerParty[partyIdx], MON_DATA_EXP);
+            species = GetMonData(&gPlayerParty[partyIdx], MON_DATA_SPECIES);
+            nlExp = gExperienceTables[gBaseStats[species].growthRate][level + 1];
+            if (exp + deltaExp >= nlExp)
+            {
+                SetMonData(&gPlayerParty[partyIdx], MON_DATA_EXP, &nlExp);
+                CalculateMonStats(&gPlayerParty[partyIdx]);
+                deltaExp -= nlExp - exp;
+                oldBank = gActiveBank;
+                gActiveBank = expTaskBank;
+                dp01_build_cmdbuf_x21_a_bb(1, 11, deltaExp);
+                gActiveBank = oldBank;
+                gTasks[taskId].func = sub_81BB628;
+            }
+            else
+            {
+                exp += deltaExp;
+                SetMonData(&gPlayerParty[partyIdx], MON_DATA_EXP, &exp);
+                gBattleBankFunc[expTaskBank] = sub_81BB284;
+                DestroyTask(taskId);
+            }
+        }
+    }
 }
