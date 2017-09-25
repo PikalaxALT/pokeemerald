@@ -249,7 +249,6 @@ bool16 IsTextPrinterActive(u8 id)
     return gTextPrinters[id].sub_union.sub.active;
 }
 
-
 u32 RenderFont(struct TextPrinter *textPrinter)
 {
     u32 ret;

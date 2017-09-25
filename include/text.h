@@ -138,15 +138,24 @@ struct FontInfo
     u8 shadowColor:4;
 };
 
-struct GlyphWidthFunc{
+struct GlyphWidthFunc
+{
     u32 font_id;
     u32 (*func)(u16 glyphId, bool32 isJapanese);
 };
 
-struct KeypadIcon {
+struct KeypadIcon
+{
     u16 tile_offset;
     u8 width;
     u8 height;
+};
+
+struct __attribute__((packed)) TextColor
+{
+    u8 fgColor;
+    u8 bgColor;
+    u8 shadowColor;
 };
 
 extern u8 gStringVar1[];
@@ -155,7 +164,7 @@ extern u8 gStringVar3[];
 extern u8 gStringVar4[];
 
 void SetFontsPointer(const struct FontInfo *fonts);
-void DeactivateAllTextPrinters (void);
+void DeactivateAllTextPrinters(void);
 u16 PrintTextOnWindow(u8 windowId, u8 fontId, u8 *str, u8 x, u8 y, u8 speed, void (*callback)(struct TextSubPrinter *, u16));
 bool16 AddTextPrinter(struct TextSubPrinter *textSubPrinter, u8 speed, void (*callback)(struct TextSubPrinter *, u16));
 void RunTextPrinters(void);
