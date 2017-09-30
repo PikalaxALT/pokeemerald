@@ -25,6 +25,11 @@
 
 #define NUM_FIELD_MAP_OBJECT_TEMPLATES 0x51
 
+struct PairedPalettes {
+    u16 tag;
+    const u16 *data;
+};
+
 #define null_object_step(name, retval) \
 bool8 FieldObjectCB2_##name(struct MapObject *, struct Sprite *);\
 void FieldObjectCB_##name(struct Sprite *sprite)\
@@ -66,8 +71,8 @@ bool8 sub(struct MapObject *mapObject, struct Sprite *sprite)\
 
 // Static RAM declarations
 
-extern u8 gUnknown_020375B4;
-extern u16 gUnknown_020375B6;
+static EWRAM_DATA u8 gUnknown_020375B4 = 0;
+static EWRAM_DATA u16 gUnknown_020375B6 = 0;
 
 // Static ROM declarations
 
@@ -91,9 +96,9 @@ static u8 sub_808E8F4(const struct SpritePalette *);
 static u8 FindFieldObjectPaletteIndexByTag(u16);
 static void sub_808EAB0(u16, u8);
 static bool8 FieldObjectDoesZCoordMatch(struct MapObject *, u8);
-//static void CameraObject_0(struct Sprite *);
-/*static*/ void CameraObject_1(struct Sprite *);
-//static void CameraObject_2(struct Sprite *);
+static void CameraObject_0(struct Sprite *);
+static void CameraObject_1(struct Sprite *);
+static void CameraObject_2(struct Sprite *);
 /*static*/ struct MapObjectTemplate *FindFieldObjectTemplateInArrayByLocalId(u8 localId, struct MapObjectTemplate *templates, u8 count);
 void npc_reset(struct MapObject *, struct Sprite *);
 void FieldObjectSetRegularAnim(struct MapObject *, struct Sprite *, u8);
@@ -124,8 +129,32 @@ bool8 sub_809558C(struct MapObject *, struct Sprite *);
 bool8 sub_8095B64(struct MapObject *, struct Sprite *);
 static void sub_8096530(struct MapObject *, struct Sprite *);
 static void npc_update_obj_anim_flag(struct MapObject *, struct Sprite *);
+static void ObjectCB_CameraObject(struct Sprite *);
 
 // ROM data
+
+const u8 gUnknown_084975C4[] = {
+    0x01, 0x01, 0x06, 0x07,
+    0x08, 0x09, 0x06, 0x07,
+    0x08, 0x09, 0x0b, 0x0b,
+    0x00, 0x00, 0x00, 0x00
+};
+
+const struct SpriteTemplate gUnknown_084975D4 = {
+    0,
+    -1,
+    &gDummyOamData,
+    gDummySpriteAnimTable,
+    NULL,
+    gDummySpriteAffineAnimTable,
+    ObjectCB_CameraObject
+};
+
+void (*const gUnknown_084975EC[])(struct Sprite *) = {
+    CameraObject_0,
+    CameraObject_1,
+    CameraObject_2
+};
 
 extern void (*const gUnknown_08505438[NUM_FIELD_MAP_OBJECT_TEMPLATES])(struct Sprite *);
 extern const u8 gUnknown_0850557C[NUM_FIELD_MAP_OBJECT_TEMPLATES];
@@ -134,14 +163,6 @@ extern const struct MapObjectGraphicsInfo *const gMauvilleOldManGraphicsInfoPoin
 extern const struct MapObjectGraphicsInfo *const gFieldObjectGraphicsInfoPointers[0xEF];
 extern u8 (*const gUnknown_0850D714[11])(s16, s16, s16, s16);
 
-struct PairedPalettes {
-    u16 tag;
-    const u16 *data;
-};
-
-extern const u8 gUnknown_084975C4[0x10];
-extern const struct SpriteTemplate gUnknown_084975D4;
-extern void (*const gUnknown_084975EC[3])(struct Sprite *);
 extern const struct SpritePalette gUnknown_0850BBC8[39];
 extern const struct PairedPalettes gUnknown_0850BD00[4];
 extern const struct PairedPalettes gUnknown_0850BD78[14];

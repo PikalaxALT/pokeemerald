@@ -3,21 +3,6 @@
 
 	.section .rodata
 
-gUnknown_084975C4:: @ 84975C4
-@ replacing .incbin "baserom.gba", 0x004975c4, 0x10
-	.byte 0x01, 0x01, 0x06, 0x07, 0x08, 0x09, 0x06, 0x07, 0x08, 0x09, 0x0b, 0x0b, 0x00, 0x00, 0x00, 0x00
-
-gUnknown_084975D4:: @ 84975D4
-@ replacing .incbin "baserom.gba", 0x004975d4, 0x18
-	.2byte 0, 65535
-	.4byte gDummyOamData, gDummySpriteAnimTable, NULL, gDummySpriteAffineAnimTable, ObjectCB_CameraObject
-
-gUnknown_084975EC:: @ 84975EC
-@ replacing .incbin "baserom.gba", 0x004975ec, 0xc
-	.4byte CameraObject_0
-	.4byte CameraObject_1
-	.4byte CameraObject_2
-
 @ 84975F8
 	.include "data/graphics/field_objects/field_object_graphics.inc"
 
