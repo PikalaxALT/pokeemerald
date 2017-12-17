@@ -488,3 +488,31 @@
 	.set OAM_SIZE_8x32,          OAM_SIZE_1 | OAM_V_RECTANGLE
 	.set OAM_SIZE_16x32,         OAM_SIZE_2 | OAM_V_RECTANGLE
 	.set OAM_SIZE_32x64,         OAM_SIZE_3 | OAM_V_RECTANGLE
+
+	.set SIO_ID,             0x0030 // Communication ID
+
+    .set SIO_8BIT_MODE,      0x0000 // Normal 8-bit communication mode
+    .set SIO_32BIT_MODE,     0x1000 // Normal 32-bit communication mode
+    .set SIO_MULTI_MODE,     0x2000 // Multi-player communication mode
+    .set SIO_UART_MODE,      0x3000 // UART communication mode
+
+    .set SIO_9600_BPS,       0x0000 // baud rate   9600 bps
+    .set SIO_38400_BPS,      0x0001 //            38400 bps
+    .set SIO_57600_BPS,      0x0002 //            57600 bps
+    .set SIO_115200_BPS,     0x0003 //           115200 bps
+
+    .set SIO_MULTI_SI,       0x0004 // Multi-player communication SI terminal
+    .set SIO_MULTI_SD,       0x0008 //                            SD terminal
+    .set SIO_MULTI_BUSY,     0x0080
+
+    .set SIO_ERROR,          0x0040 // Detect error
+    .set SIO_START,          0x0080 // Start transfer
+    .set SIO_ENABLE,         0x0080 // Enable SIO
+
+    .set SIO_INTR_ENABLE,    0x4000
+
+    .set SIO_MULTI_SI_SHIFT, 2
+    .set SIO_MULTI_SI_MASK,  0x1
+    .set SIO_MULTI_DI_SHIFT, 3
+    .set SIO_MULTI_DI_MASK,  0x1
+

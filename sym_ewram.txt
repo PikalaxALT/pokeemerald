@@ -30,7 +30,7 @@ gUnknown_020223BD: @ 20223BD
 
 gUnknown_020223C0: @ 20223C0
 	.space 0x4
-
+berry
 gBlockRecvBuffer: @ 20223C4
 	.space 0x500
 
@@ -51,7 +51,7 @@ gUnknown_020229CC: @ 20229CC
 
 gLinkPlayers: @ 20229E8
 	.space 0x24
-    
+
 gUnknown_02022A0C: @ 2022A0C
 	.space 0x68
 
@@ -564,7 +564,7 @@ gUnknown_0203229C: @ 203229C
 
 gUnknown_020322A0: @ 20322A0
 	.space 0x4
-    
+
     .include "src/berry_blender.o"
 
 gDifferentSaveFile: @ 20322D4
@@ -997,7 +997,7 @@ gUnknown_02039F94: @ 2039F94
 	.space 0x4
 
     .include "src/money.o"
-    
+
     .align 2
 gUnknown_02039F9C: @ 2039F9C
 	.space 0x78
@@ -1160,7 +1160,7 @@ gUnknown_0203AB34: @ 203AB34
 	.space 0x4
 
     .include "src/battle_ai_script_commands.o"
-    
+
 .align 2
 gUnknown_0203AB40: @ 203AB40
 	.space 0x8
@@ -1249,7 +1249,7 @@ gUnknown_0203AB98: @ 203AB98
 	.space 0x4
 
     .include "src/coins.o"
-    
+
     .align 2
 sTransitionStructPtr: @ 203ABA0
 	.space 0x4
@@ -1285,7 +1285,7 @@ gUnknown_0203ABB8: @ 203ABB8
 	.space 0x4
 
     .include "src/save.o"
-    
+
 .space 0x4 /*unused var?*/
 
 gUnknown_0203BBC0: @ 203BBC0
