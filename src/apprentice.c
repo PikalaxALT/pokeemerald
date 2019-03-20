@@ -2034,7 +2034,7 @@ static void sub_81A1224(void)
         {
             PLAYER_APPRENTICE.field_B8[PLAYER_APPRENTICE.field_B1_1 - 3].unk0_3 = 0;
             PLAYER_APPRENTICE.field_B8[PLAYER_APPRENTICE.field_B1_1 - 3].unk2 = gSpecialVar_0x8005;
-            gSpecialVar_Result = i;
+            gSpecialVar_Result = 0;
             return;
         }
     }
