@@ -3608,22 +3608,26 @@ static void BattleIntroOpponent2SendsOutMonAnimation(void)
     gBattleMainFunc = BattleIntroRecordMonsToDex;
 }
 
-#ifdef NONMATCHING
+//#ifdef NONMATCHING
 static void BattleIntroOpponent1SendsOutMonAnimation(void)
 {
     u32 position;
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_RECORDED))
-        position = B_POSITION_OPPONENT_LEFT;
-    else if (gBattleTypeFlags & BATTLE_TYPE_x2000000)
+    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_x80000000)
-            position = B_POSITION_OPPONENT_LEFT;
+        if (gBattleTypeFlags & BATTLE_TYPE_x2000000)
+        {
+            if (gBattleTypeFlags & BATTLE_TYPE_x80000000)
+                position = B_POSITION_OPPONENT_LEFT;
+            else
+                position = B_POSITION_PLAYER_LEFT;
+        }
         else
-            position = B_POSITION_PLAYER_LEFT;
+            position = B_POSITION_OPPONENT_LEFT;
     }
     else
         position = B_POSITION_OPPONENT_LEFT;
+
 
     if (gBattleControllerExecFlags)
         return;
@@ -3644,7 +3648,7 @@ static void BattleIntroOpponent1SendsOutMonAnimation(void)
 
     gBattleMainFunc = BattleIntroRecordMonsToDex;
 }
-#else
+/*#else
 NAKED
 static void BattleIntroOpponent1SendsOutMonAnimation(void)
 {
@@ -3730,7 +3734,7 @@ _0803B2F2:\n\
     .pool\n\
         .syntax divided");
 }
-#endif // NONMATCHING
+#endif // NONMATCHING*/
 
 static void BattleIntroRecordMonsToDex(void)
 {
@@ -5538,6 +5542,7 @@ static void HandleAction_Switch(void)
         gBattleResults.playerSwitchesCounter++;
 }
 
+#ifdef NONMATCHING
 static void HandleAction_UseItem(void)
 {
     gBattlerAttacker = gBattlerTarget = gBattlerByTurnOrder[gCurrentTurnActionNumber];
@@ -5560,32 +5565,30 @@ static void HandleAction_UseItem(void)
     }
     else
     {
-        gBattleScripting.battler = gBattlerAttacker;
-
-        switch (*(gBattleStruct->AI_itemType + (gBattlerAttacker >> 1)))
+        switch (*(gBattleStruct->AI_itemType + (gBattleScripting.battler = gBattlerAttacker) / 2))
         {
         case AI_ITEM_FULL_RESTORE:
         case AI_ITEM_HEAL_HP:
             break;
         case AI_ITEM_CURE_CONDITION:
             gBattleCommunication[MULTISTRING_CHOOSER] = 0;
-            if (*(gBattleStruct->AI_itemFlags + gBattlerAttacker / 2) & 1)
+            if (gBattleStruct->AI_itemFlags[gBattlerAttacker >> 1] & 1)
             {
-                if (*(gBattleStruct->AI_itemFlags + gBattlerAttacker / 2) & 0x3E)
+                if (gBattleStruct->AI_itemFlags[gBattlerAttacker >> 1] & 0x3E)
                     gBattleCommunication[MULTISTRING_CHOOSER] = 5;
             }
             else
             {
-                while (!(*(gBattleStruct->AI_itemFlags + gBattlerAttacker / 2) & 1))
+                while (!(gBattleStruct->AI_itemFlags[gBattlerAttacker >> 1] & 1))
                 {
-                    *(gBattleStruct->AI_itemFlags + gBattlerAttacker / 2) >>= 1;
+                    gBattleStruct->AI_itemFlags[gBattlerAttacker >> 1] >>= 1;
                     gBattleCommunication[MULTISTRING_CHOOSER]++;
                 }
             }
             break;
         case AI_ITEM_X_STAT:
             gBattleCommunication[MULTISTRING_CHOOSER] = 4;
-            if (*(gBattleStruct->AI_itemFlags + (gBattlerAttacker >> 1)) & 0x80)
+            if (*(gBattleStruct->AI_itemFlags + gBattlerAttacker / 2) & 0x80)
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = 5;
             }
@@ -5594,9 +5597,9 @@ static void HandleAction_UseItem(void)
                 PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_ATK)
                 PREPARE_STRING_BUFFER(gBattleTextBuff2, 0xD2)
 
-                while (!((*(gBattleStruct->AI_itemFlags + (gBattlerAttacker >> 1))) & 1))
+                while (!((gBattleStruct->AI_itemFlags[gBattlerAttacker >> 1]) & 1))
                 {
-                    *(gBattleStruct->AI_itemFlags + gBattlerAttacker / 2) >>= 1;
+                    gBattleStruct->AI_itemFlags[gBattlerAttacker >> 1] >>= 1;
                     gBattleTextBuff1[2]++;
                 }
 
@@ -5616,6 +5619,395 @@ static void HandleAction_UseItem(void)
     }
     gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
 }
+#else
+NAKED
+static void HandleAction_UseItem(void)
+{
+    asm("\tpush\t{r4, r5, r6, r7, lr}\n"
+        "\tmov\tr7, sl\n"
+        "\tmov\tr6, r9\n"
+        "\tmov\tr5, r8\n"
+        "\tpush\t{r5, r6, r7}\n"
+        "\tldr\tr4, .UserL2427\n"
+        "\tldr\tr2, .UserL2427+0x4\n"
+        "\tldr\tr1, .UserL2427+0x8\n"
+        "\tldr\tr0, .UserL2427+0xc\n"
+        "\tldrb\tr0, [r0]\n"
+        "\tadd\tr0, r0, r1\n"
+        "\tldrb\tr0, [r0]\n"
+        "\tstrb\tr0, [r2]\n"
+        "\tstrb\tr0, [r4]\n"
+        "\tldr\tr0, .UserL2427+0x10\n"
+        "\tmov\tr1, #0x0\n"
+        "\tstrh\tr1, [r0]\n"
+        "\tldr\tr0, .UserL2427+0x14\n"
+        "\tstrh\tr1, [r0]\n"
+        "\tldrb\tr0, [r4]\n"
+        "\tbl\tClearFuryCutterDestinyBondGrudge\n"
+        "\tldr\tr5, .UserL2427+0x18\n"
+        "\tldr\tr2, .UserL2427+0x1c\n"
+        "\tldrb\tr1, [r4]\n"
+        "\tlsl\tr1, r1, #0x9\n"
+        "\tadd\tr0, r2, #0x1\n"
+        "\tadd\tr0, r1, r0\n"
+        "\tldrb\tr3, [r0]\n"
+        "\tadd\tr2, r2, #0x2\n"
+        "\tadd\tr1, r1, r2\n"
+        "\tldrb\tr0, [r1]\n"
+        "\tlsl\tr0, r0, #0x8\n"
+        "\torr\tr3, r3, r0\n"
+        "\tstrh\tr3, [r5]\n"
+        "\tcmp\tr3, #0xc\n"
+        "\tbhi\t.UserL2396\t@cond_branch\n"
+        "\tldr\tr2, .UserL2427+0x20\n"
+        "\tldr\tr1, .UserL2427+0x24\n"
+        "\tldrh\tr0, [r5]\n"
+        "\tlsl\tr0, r0, #0x2\n"
+        "\tadd\tr0, r0, r1\n"
+        "\tldr\tr0, [r0]\n"
+        "\tstr\tr0, [r2]\n"
+        "\tldr\tr0, .UserL2427+0x28\n"
+        "\tmov\tsl, r0\n"
+        "\tb\t.UserL2397\n"
+        ".UserL2428:\n"
+        "\t.align\t2, 0\n"
+        ".UserL2427:\n"
+        "\t.word\tgBattlerAttacker\n"
+        "\t.word\tgBattlerTarget\n"
+        "\t.word\tgBattlerByTurnOrder\n"
+        "\t.word\tgCurrentTurnActionNumber\n"
+        "\t.word\tgBattle_BG0_X\n"
+        "\t.word\tgBattle_BG0_Y\n"
+        "\t.word\tgLastUsedItem\n"
+        "\t.word\tgBattleBufferB\n"
+        "\t.word\tgBattlescriptCurrInstr\n"
+        "\t.word\tgBattlescriptsForBallThrow\n"
+        "\t.word\tgCurrentActionFuncId\n"
+        ".UserL2396:\n"
+        "\tadd\tr0, r3, #0\n"
+        "\tsub\tr0, r0, #0x50\n"
+        "\tlsl\tr0, r0, #0x10\n"
+        "\tlsr\tr0, r0, #0x10\n"
+        "\tcmp\tr0, #0x1\n"
+        "\tbhi\t.UserL2398\t@cond_branch\n"
+        "\tldr\tr0, .UserL2429\n"
+        "\tldr\tr1, .UserL2429+0x4\n"
+        "\tldr\tr1, [r1]\n"
+        "\tstr\tr1, [r0]\n"
+        "\tldr\tr1, .UserL2429+0x8\n"
+        "\tmov\tsl, r1\n"
+        "\tb\t.UserL2397\n"
+        ".UserL2430:\n"
+        "\t.align\t2, 0\n"
+        ".UserL2429:\n"
+        "\t.word\tgBattlescriptCurrInstr\n"
+        "\t.word\tgBattlescriptsForRunningByItem\n"
+        "\t.word\tgCurrentActionFuncId\n"
+        ".UserL2398:\n"
+        "\tldrb\tr0, [r4]\n"
+        "\tbl\tGetBattlerSide\n"
+        "\tlsl\tr0, r0, #0x18\n"
+        "\tcmp\tr0, #0\n"
+        "\tbne\t.UserL2400\t@cond_branch\n"
+        "\tldr\tr0, .UserL2431\n"
+        "\tldr\tr1, .UserL2431+0x4\n"
+        "\tldr\tr1, [r1]\n"
+        "\tstr\tr1, [r0]\n"
+        "\tldr\tr2, .UserL2431+0x8\n"
+        "\tmov\tsl, r2\n"
+        "\tb\t.UserL2397\n"
+        ".UserL2432:\n"
+        "\t.align\t2, 0\n"
+        ".UserL2431:\n"
+        "\t.word\tgBattlescriptCurrInstr\n"
+        "\t.word\tgBattlescriptsForUsingItem\n"
+        "\t.word\tgCurrentActionFuncId\n"
+        ".UserL2400:\n"
+        "\tldr\tr3, .UserL2433\n"
+        "\tldrb\tr0, [r4]\n"
+        "\tstrb\tr0, [r3, #0x17]\n"
+        "\tlsl\tr0, r0, #0x18\n"
+        "\tlsr\tr0, r0, #0x19\n"
+        "\tldr\tr2, .UserL2433+0x4\n"
+        "\tldr\tr1, [r2]\n"
+        "\tadd\tr0, r0, r1\n"
+        "\tadd\tr0, r0, #0xc4\n"
+        "\tldrb\tr0, [r0]\n"
+        "\tsub\tr0, r0, #0x1\n"
+        "\tmov\tr8, r4\n"
+        "\tldr\tr1, .UserL2433+0x8\n"
+        "\tmov\tr9, r1\n"
+        "\tldr\tr6, .UserL2433+0xc\n"
+        "\tmov\tip, r3\n"
+        "\tadd\tr7, r2, #0\n"
+        "\tldr\tr2, .UserL2433+0x10\n"
+        "\tmov\tsl, r2\n"
+        "\tcmp\tr0, #0x4\n"
+        "\tbls\t.UserLCB20824\n"
+        "\tb\t.UserL2402\t@long jump\n"
+        ".UserLCB20824:\n"
+        "\tlsl\tr0, r0, #0x2\n"
+        "\tldr\tr1, .UserL2433+0x14\n"
+        "\tadd\tr0, r0, r1\n"
+        "\tldr\tr0, [r0]\n"
+        "\tmov\tpc, r0\n"
+        ".UserL2434:\n"
+        "\t.align\t2, 0\n"
+        ".UserL2433:\n"
+        "\t.word\tgBattleScripting\n"
+        "\t.word\tgBattleStruct\n"
+        "\t.word\tgBattlescriptCurrInstr\n"
+        "\t.word\tgBattlescriptsForUsingItem\n"
+        "\t.word\tgCurrentActionFuncId\n"
+        "\t.word\t.UserL2423\n"
+        "\t.align\t2, 0\n"
+        "\t.align\t2, 0\n"
+        ".UserL2423:\n"
+        "\t.word\t.UserL2402\n"
+        "\t.word\t.UserL2402\n"
+        "\t.word\t.UserL2405\n"
+        "\t.word\t.UserL2413\n"
+        "\t.word\t.UserL2420\n"
+        ".UserL2405:\n"
+        "\tldr\tr5, .UserL2435\n"
+        "\tmov\tr0, #0x0\n"
+        "\tstrb\tr0, [r5, #0x5]\n"
+        "\tldr\tr2, .UserL2435+0x4\n"
+        "\tldrb\tr0, [r2]\n"
+        "\tlsr\tr0, r0, #0x1\n"
+        "\tldr\tr1, [r7]\n"
+        "\tadd\tr0, r0, r1\n"
+        "\tadd\tr0, r0, #0xc6\n"
+        "\tldrb\tr1, [r0]\n"
+        "\tmov\tr0, #0x1\n"
+        "\tand\tr0, r0, r1\n"
+        "\tmov\tr8, r2\n"
+        "\tcmp\tr0, #0\n"
+        "\tbeq\t.UserL2425\t@cond_branch\n"
+        "\tmov\tr0, #0x3e\n"
+        "\tand\tr0, r0, r1\n"
+        "\tldr\tr1, .UserL2435+0x8\n"
+        "\tmov\tr9, r1\n"
+        "\tldr\tr6, .UserL2435+0xc\n"
+        "\tldr\tr2, .UserL2435+0x10\n"
+        "\tmov\tsl, r2\n"
+        "\tcmp\tr0, #0\n"
+        "\tbne\t.UserLCB20883\n"
+        "\tb\t.UserL2402\t@long jump\n"
+        ".UserLCB20883:\n"
+        "\tmov\tr0, #0x5\n"
+        "\tstrb\tr0, [r5, #0x5]\n"
+        "\tb\t.UserL2402\n"
+        ".UserL2436:\n"
+        "\t.align\t2, 0\n"
+        ".UserL2435:\n"
+        "\t.word\tgBattleCommunication\n"
+        "\t.word\tgBattlerAttacker\n"
+        "\t.word\tgBattlescriptCurrInstr\n"
+        "\t.word\tgBattlescriptsForUsingItem\n"
+        "\t.word\tgCurrentActionFuncId\n"
+        ".UserL2425:\n"
+        "\tldr\tr0, .UserL2437\n"
+        "\tmov\tr9, r0\n"
+        "\tldr\tr6, .UserL2437+0x4\n"
+        "\tldr\tr1, .UserL2437+0x8\n"
+        "\tmov\tsl, r1\n"
+        "\tmov\tr4, r8\n"
+        "\tadd\tr3, r7, #0\n"
+        "\tadd\tr2, r5, #0\n"
+        ".UserL2411:\n"
+        "\tldrb\tr1, [r4]\n"
+        "\tlsr\tr1, r1, #0x1\n"
+        "\tldr\tr0, [r3]\n"
+        "\tadd\tr1, r1, r0\n"
+        "\tadd\tr1, r1, #0xc6\n"
+        "\tldrb\tr0, [r1]\n"
+        "\tlsr\tr0, r0, #0x1\n"
+        "\tstrb\tr0, [r1]\n"
+        "\tldrb\tr0, [r2, #0x5]\n"
+        "\tadd\tr0, r0, #0x1\n"
+        "\tstrb\tr0, [r2, #0x5]\n"
+        "\tldrb\tr0, [r4]\n"
+        "\tlsr\tr0, r0, #0x1\n"
+        "\tldr\tr1, [r3]\n"
+        "\tadd\tr0, r0, r1\n"
+        "\tadd\tr0, r0, #0xc6\n"
+        "\tldrb\tr1, [r0]\n"
+        "\tmov\tr0, #0x1\n"
+        "\tand\tr0, r0, r1\n"
+        "\tcmp\tr0, #0\n"
+        "\tbeq\t.UserL2411\t@cond_branch\n"
+        "\tb\t.UserL2402\n"
+        ".UserL2438:\n"
+        "\t.align\t2, 0\n"
+        ".UserL2437:\n"
+        "\t.word\tgBattlescriptCurrInstr\n"
+        "\t.word\tgBattlescriptsForUsingItem\n"
+        "\t.word\tgCurrentActionFuncId\n"
+        ".UserL2413:\n"
+        "\tldr\tr3, .UserL2439\n"
+        "\tmov\tr0, #0x4\n"
+        "\tstrb\tr0, [r3, #0x5]\n"
+        "\tldr\tr2, .UserL2439+0x4\n"
+        "\tldrb\tr0, [r2]\n"
+        "\tlsr\tr0, r0, #0x1\n"
+        "\tldr\tr1, [r7]\n"
+        "\tadd\tr0, r0, r1\n"
+        "\tadd\tr6, r0, #0\n"
+        "\tadd\tr6, r6, #0xc6\n"
+        "\tldrb\tr1, [r6]\n"
+        "\tmov\tr0, #0x80\n"
+        "\tand\tr0, r0, r1\n"
+        "\tlsl\tr0, r0, #0x18\n"
+        "\tlsr\tr5, r0, #0x18\n"
+        "\tmov\tr8, r2\n"
+        "\tcmp\tr5, #0\n"
+        "\tbeq\t.UserL2414\t@cond_branch\n"
+        "\tmov\tr0, #0x5\n"
+        "\tstrb\tr0, [r3, #0x5]\n"
+        "\tldr\tr2, .UserL2439+0x8\n"
+        "\tmov\tr9, r2\n"
+        "\tldr\tr6, .UserL2439+0xc\n"
+        "\tldr\tr0, .UserL2439+0x10\n"
+        "\tmov\tsl, r0\n"
+        "\tb\t.UserL2402\n"
+        ".UserL2440:\n"
+        "\t.align\t2, 0\n"
+        ".UserL2439:\n"
+        "\t.word\tgBattleCommunication\n"
+        "\t.word\tgBattlerAttacker\n"
+        "\t.word\tgBattlescriptCurrInstr\n"
+        "\t.word\tgBattlescriptsForUsingItem\n"
+        "\t.word\tgCurrentActionFuncId\n"
+        ".UserL2414:\n"
+        "\tldr\tr3, .UserL2441\n"
+        "\tmov\tr4, #0xfd\n"
+        "\tstrb\tr4, [r3]\n"
+        "\tmov\tr0, #0x5\n"
+        "\tstrb\tr0, [r3, #0x1]\n"
+        "\tmov\tr2, #0x1\n"
+        "\tstrb\tr2, [r3, #0x2]\n"
+        "\tmov\tr0, #0xff\n"
+        "\tstrb\tr0, [r3, #0x3]\n"
+        "\tldr\tr1, .UserL2441+0x4\n"
+        "\tstrb\tr4, [r1]\n"
+        "\tstrb\tr5, [r1, #0x1]\n"
+        "\tmov\tr0, #0xd2\n"
+        "\tstrb\tr0, [r1, #0x2]\n"
+        "\tstrb\tr5, [r1, #0x3]\n"
+        "\tsub\tr0, r0, #0xd3\n"
+        "\tstrb\tr0, [r1, #0x4]\n"
+        "\tldrb\tr0, [r6]\n"
+        "\tand\tr2, r2, r0\n"
+        "\tldr\tr1, .UserL2441+0x8\n"
+        "\tmov\tr9, r1\n"
+        "\tldr\tr6, .UserL2441+0xc\n"
+        "\tldr\tr0, .UserL2441+0x10\n"
+        "\tmov\tsl, r0\n"
+        "\tcmp\tr2, #0\n"
+        "\tbne\t.UserL2417\t@cond_branch\n"
+        "\tmov\tr5, r8\n"
+        "\tadd\tr4, r7, #0\n"
+        "\tadd\tr2, r3, #0\n"
+        ".UserL2418:\n"
+        "\tldrb\tr1, [r5]\n"
+        "\tlsr\tr1, r1, #0x1\n"
+        "\tldr\tr0, [r4]\n"
+        "\tadd\tr1, r1, r0\n"
+        "\tadd\tr1, r1, #0xc6\n"
+        "\tldrb\tr0, [r1]\n"
+        "\tlsr\tr0, r0, #0x1\n"
+        "\tstrb\tr0, [r1]\n"
+        "\tldrb\tr0, [r2, #0x2]\n"
+        "\tadd\tr0, r0, #0x1\n"
+        "\tstrb\tr0, [r2, #0x2]\n"
+        "\tldrb\tr0, [r5]\n"
+        "\tlsr\tr0, r0, #0x1\n"
+        "\tldr\tr1, [r4]\n"
+        "\tadd\tr0, r0, r1\n"
+        "\tadd\tr0, r0, #0xc6\n"
+        "\tldrb\tr1, [r0]\n"
+        "\tmov\tr0, #0x1\n"
+        "\tand\tr0, r0, r1\n"
+        "\tcmp\tr0, #0\n"
+        "\tbeq\t.UserL2418\t@cond_branch\n"
+        ".UserL2417:\n"
+        "\tldrb\tr0, [r3, #0x2]\n"
+        "\tadd\tr0, r0, #0xe\n"
+        "\tmov\tr1, #0x0\n"
+        "\tmov\tr2, ip\n"
+        "\tstrb\tr0, [r2, #0x10]\n"
+        "\tstrb\tr1, [r2, #0x11]\n"
+        "\tb\t.UserL2402\n"
+        ".UserL2442:\n"
+        "\t.align\t2, 0\n"
+        ".UserL2441:\n"
+        "\t.word\tgBattleTextBuff1\n"
+        "\t.word\tgBattleTextBuff2\n"
+        "\t.word\tgBattlescriptCurrInstr\n"
+        "\t.word\tgBattlescriptsForUsingItem\n"
+        "\t.word\tgCurrentActionFuncId\n"
+        ".UserL2420:\n"
+        "\tldr\tr0, .UserL2443\n"
+        "\tldr\tr1, [r0]\n"
+        "\tmov\tr0, #0x1\n"
+        "\tand\tr1, r1, r0\n"
+        "\tcmp\tr1, #0\n"
+        "\tbeq\t.UserL2421\t@cond_branch\n"
+        "\tldr\tr1, .UserL2443+0x4\n"
+        "\tmov\tr0, #0x2\n"
+        "\tstrb\tr0, [r1, #0x5]\n"
+        "\tb\t.UserL2426\n"
+        ".UserL2444:\n"
+        "\t.align\t2, 0\n"
+        ".UserL2443:\n"
+        "\t.word\tgBattleTypeFlags\n"
+        "\t.word\tgBattleCommunication\n"
+        ".UserL2421:\n"
+        "\tldr\tr0, .UserL2445\n"
+        "\tstrb\tr1, [r0, #0x5]\n"
+        ".UserL2426:\n"
+        "\tldr\tr0, .UserL2445+0x4\n"
+        "\tmov\tr8, r0\n"
+        "\tldr\tr1, .UserL2445+0x8\n"
+        "\tmov\tr9, r1\n"
+        "\tldr\tr6, .UserL2445+0xc\n"
+        "\tldr\tr2, .UserL2445+0x10\n"
+        "\tmov\tsl, r2\n"
+        ".UserL2402:\n"
+        "\tmov\tr1, r8\n"
+        "\tldrb\tr0, [r1]\n"
+        "\tlsr\tr0, r0, #0x1\n"
+        "\tldr\tr1, [r7]\n"
+        "\tadd\tr0, r0, r1\n"
+        "\tadd\tr0, r0, #0xc4\n"
+        "\tldrb\tr0, [r0]\n"
+        "\tlsl\tr0, r0, #0x2\n"
+        "\tadd\tr0, r0, r6\n"
+        "\tldr\tr0, [r0]\n"
+        "\tmov\tr2, r9\n"
+        "\tstr\tr0, [r2]\n"
+        ".UserL2397:\n"
+        "\tmov\tr0, #0xa\n"
+        "\tmov\tr1, sl\n"
+        "\tstrb\tr0, [r1]\n"
+        "\tpop\t{r3, r4, r5}\n"
+        "\tmov\tr8, r3\n"
+        "\tmov\tr9, r4\n"
+        "\tmov\tsl, r5\n"
+        "\tpop\t{r4, r5, r6, r7}\n"
+        "\tpop\t{r0}\n"
+        "\tbx\tr0\n"
+        ".UserL2446:\n"
+        "\t.align\t2, 0\n"
+        ".UserL2445:\n"
+        "\t.word\tgBattleCommunication\n"
+        "\t.word\tgBattlerAttacker\n"
+        "\t.word\tgBattlescriptCurrInstr\n"
+        "\t.word\tgBattlescriptsForUsingItem\n"
+        "\t.word\tgCurrentActionFuncId\n");
+}
+#endif
 
 bool8 TryRunFromBattle(u8 battler)
 {
