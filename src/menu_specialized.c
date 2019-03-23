@@ -447,339 +447,388 @@ void sub_81D2230(struct UnknownStruct_81D1ED4 *arg0)
     arg0->unk354 = 1;
 }
 
-/* TODO
+#ifdef NONMATCHING
 static void sub_81D2278(struct UnknownStruct_81D1ED4 *arg0, u16 arg1[66][2], struct UnknownSubStruct_81D1ED4 *arg2, struct UnknownSubStruct_81D1ED4 *arg3, u8 arg4, u16 arg5[66][2])
 {
     s32 var_2C = 0;
-    u16 r8;
-    s32 r10, r4, r2, r0, r1, var_30;
+    u16 r8, i;
+    s32 r10, r4, r0, var_30;
 
     if (arg2->unk2 < arg3->unk2)
     {
-        r2 = arg2->unk2;
-        r10 = arg2->unk2;
         r0 = arg3->unk2;
-        r1 = arg2->unk0;
-        r4 = r1 << 10;
+        r10 = arg2->unk2;
+        r4 = arg2->unk0 << 10;
         var_30 = arg3->unk0;
+        if ((r8 = arg3->unk2 - arg2->unk2) != 0)
+            var_2C = ((arg3->unk0 - arg2->unk0) << 10) / r8;
+
     }
     else
     {
-        r0 = arg2->unk0;
+        r0 = arg2->unk2;
         r10 = arg3->unk2;
-        r1 = arg3->unk0;
-        r4 = r1 << 10;
+        r4 = arg3->unk0 << 10;
         var_30 = arg2->unk0;
-        r2 = arg3->unk2;
+        if ((r8 = arg2->unk2 - arg3->unk2) != 0)
+            var_2C = ((arg2->unk0 - arg3->unk0) << 10) / r8;
     }
-    r8 = r0 - r2;
-    if (r8 != 0)
-        var_2C = ((var_30 - r1) << 10) / r8;
 
     r8++;
     if (arg5 == NULL)
     {
-
+        for (i = 0; i < r8; i++)
+        {
+            arg1[0][arg4] = (r4 >> 10) + ((r4 >> 9) & 1) + arg4;
+            r4 += var_2C;
+            arg1++;
+        }
+    }
+    else if (var_2C > 0)
+    {
+        arg5 += r10 - 0x38;
+        for (i = 0; i < r8 && r4 < (0x9B << 10); i++)
+        {
+            arg5[0][arg4] = (r4 >> 10) + ((r4 >> 9) & 1) + arg4;
+            r4 += var_2C;
+            arg5++;
+        }
+        arg0->unk350 = r10 + i;
+        arg1 += arg0->unk350 - 0x38;
+        for (; i < r8; i++)
+        {
+            arg1[0][arg4] = (r4 >> 10) + ((r4 >> 9) & 1) + arg4;
+            r4 += var_2C;
+            arg1++;
+        }
+        arg1[-1][arg4] = var_30;
+    }
+    else if (var_2C < 0)
+    {
+        arg1 += r10 - 0x38;
+        for (i = 0; i < r8; i++)
+        {
+            arg1[0][arg4] = (r4 >> 10) + ((r4 >> 9) & 1) + arg4;
+            if (r4 >= (0x9B << 10))
+                break;
+            r4 += var_2C;
+            arg1++;
+        }
+        arg0->unk350 = r10 + i;
+        arg5 += arg0->unk350 - 0x38;
+        for (; i < r8; i++)
+        {
+            arg5[0][arg4] = (r4 >> 10) + ((r4 >> 9) & 1) + arg4;
+            r4 += var_2C;
+            arg5++;
+        }
+        arg5[-1][arg4] = var_30;
+    }
+    else
+    {
+        arg1[r10 - 0x38][1] = arg2->unk0 + 1;
+        arg5[r10 - 0x38][0] = arg3->unk0;
+        arg5[r10 - 0x38][1] = 0x9B;
     }
 }
-*/
+#else
 NAKED
 static void sub_81D2278(struct UnknownStruct_81D1ED4 *arg0, u16 arg1[66][2], struct UnknownSubStruct_81D1ED4 *arg2, struct UnknownSubStruct_81D1ED4 *arg3, u8 arg4, u16 arg5[66][2])
 {
-    asm_unified("\n\
-                push {r4-r7,lr}\n\
-                mov r7, r10\n\
-                mov r6, r9\n\
-                mov r5, r8\n\
-                push {r5-r7}\n\
-                sub sp, 0x18\n\
-                str r0, [sp]\n\
-                adds r6, r1, 0\n\
-                adds r5, r2, 0\n\
-                str r3, [sp, 0x4]\n\
-                ldr r0, [sp, 0x38]\n\
-                ldr r7, [sp, 0x3C]\n\
-                lsls r0, 24\n\
-                lsrs r0, 24\n\
-                mov r9, r0\n\
-                movs r0, 0\n\
-                str r0, [sp, 0xC]\n\
-                ldrh r0, [r5, 0x2]\n\
-                ldrh r1, [r3, 0x2]\n\
-                cmp r0, r1\n\
-                bcs _081D22B2\n\
-                adds r2, r0, 0\n\
-                mov r10, r2\n\
-                ldrh r0, [r3, 0x2]\n\
-                ldrh r1, [r5]\n\
-                lsls r4, r1, 10\n\
-                ldrh r3, [r3]\n\
-                str r3, [sp, 0x8]\n\
-                b _081D22C6\n\
-            _081D22B2:\n\
-                ldrh r0, [r5, 0x2]\n\
-                ldr r1, [sp, 0x4]\n\
-                ldrh r1, [r1, 0x2]\n\
-                mov r10, r1\n\
-                ldr r2, [sp, 0x4]\n\
-                ldrh r1, [r2]\n\
-                lsls r4, r1, 10\n\
-                ldrh r3, [r5]\n\
-                str r3, [sp, 0x8]\n\
-                mov r2, r10\n\
-            _081D22C6:\n\
-                subs r0, r2\n\
-                lsls r0, 16\n\
-                lsrs r0, 16\n\
-                mov r8, r0\n\
-                cmp r0, 0\n\
-                beq _081D22DE\n\
-                subs r0, r3, r1\n\
-                lsls r0, 10\n\
-                mov r1, r8\n\
-                bl __divsi3\n\
-                str r0, [sp, 0xC]\n\
-            _081D22DE:\n\
-                mov r0, r8\n\
-                adds r0, 0x1\n\
-                lsls r0, 16\n\
-                lsrs r0, 16\n\
-                mov r8, r0\n\
-                cmp r7, 0\n\
-                bne _081D2328\n\
-                mov r0, r10\n\
-                subs r0, 0x38\n\
-                lsls r0, 2\n\
-                adds r6, r0\n\
-                movs r5, 0\n\
-                mov r3, r9\n\
-                lsls r3, 1\n\
-                mov r12, r3\n\
-                ldr r0, [sp, 0x8]\n\
-                add r0, r9\n\
-                str r0, [sp, 0x10]\n\
-                cmp r7, r8\n\
-                bcs _081D23B6\n\
-                movs r7, 0x1\n\
-            _081D2308:\n\
-                adds r2, r3, r6\n\
-                asrs r1, r4, 10\n\
-                asrs r0, r4, 9\n\
-                ands r0, r7\n\
-                adds r1, r0\n\
-                add r1, r9\n\
-                strh r1, [r2]\n\
-                ldr r1, [sp, 0xC]\n\
-                adds r4, r1\n\
-                adds r6, 0x4\n\
-                adds r0, r5, 0x1\n\
-                lsls r0, 16\n\
-                lsrs r5, r0, 16\n\
-                cmp r5, r8\n\
-                bcc _081D2308\n\
-                b _081D23B6\n\
-            _081D2328:\n\
-                ldr r2, [sp, 0xC]\n\
-                cmp r2, 0\n\
-                ble _081D23C0\n\
-                mov r0, r10\n\
-                subs r0, 0x38\n\
-                lsls r0, 2\n\
-                adds r7, r0\n\
-                movs r5, 0\n\
-                mov r3, r9\n\
-                lsls r3, 1\n\
-                mov r12, r3\n\
-                ldr r0, [sp, 0x8]\n\
-                add r0, r9\n\
-                str r0, [sp, 0x10]\n\
-                cmp r5, r8\n\
-                bcs _081D237A\n\
-                ldr r0, =0x00026bff\n\
-                cmp r4, r0\n\
-                bgt _081D237A\n\
-                mov r1, r12\n\
-                str r1, [sp, 0x14]\n\
-            _081D2352:\n\
-                ldr r3, [sp, 0x14]\n\
-                adds r2, r3, r7\n\
-                asrs r1, r4, 10\n\
-                asrs r0, r4, 9\n\
-                movs r3, 0x1\n\
-                ands r0, r3\n\
-                adds r1, r0\n\
-                add r1, r9\n\
-                strh r1, [r2]\n\
-                ldr r0, [sp, 0xC]\n\
-                adds r4, r0\n\
-                adds r7, 0x4\n\
-                adds r0, r5, 0x1\n\
-                lsls r0, 16\n\
-                lsrs r5, r0, 16\n\
-                cmp r5, r8\n\
-                bcs _081D237A\n\
-                ldr r1, =0x00026bff\n\
-                cmp r4, r1\n\
-                ble _081D2352\n\
-            _081D237A:\n\
-                mov r2, r10\n\
-                adds r1, r2, r5\n\
-                ldr r3, [sp]\n\
-                movs r2, 0xD4\n\
-                lsls r2, 2\n\
-                adds r0, r3, r2\n\
-                strh r1, [r0]\n\
-                ldrh r0, [r0]\n\
-                subs r0, 0x38\n\
-                lsls r0, 2\n\
-                adds r6, r0\n\
-                cmp r5, r8\n\
-                bcs _081D23B6\n\
-                mov r3, r12\n\
-                movs r7, 0x1\n\
-            _081D2398:\n\
-                adds r2, r3, r6\n\
-                asrs r1, r4, 10\n\
-                asrs r0, r4, 9\n\
-                ands r0, r7\n\
-                adds r1, r0\n\
-                add r1, r9\n\
-                strh r1, [r2]\n\
-                ldr r0, [sp, 0xC]\n\
-                adds r4, r0\n\
-                adds r6, 0x4\n\
-                adds r0, r5, 0x1\n\
-                lsls r0, 16\n\
-                lsrs r5, r0, 16\n\
-                cmp r5, r8\n\
-                bcc _081D2398\n\
-            _081D23B6:\n\
-                subs r0, r6, 0x4\n\
-                b _081D248C\n\
-                .pool\n\
-            _081D23C0:\n\
-                ldr r1, [sp, 0xC]\n\
-                cmp r1, 0\n\
-                bge _081D2464\n\
-                mov r0, r10\n\
-                subs r0, 0x38\n\
-                lsls r0, 2\n\
-                adds r6, r0\n\
-                movs r5, 0\n\
-                mov r2, r9\n\
-                lsls r2, 1\n\
-                mov r12, r2\n\
-                ldr r3, [sp, 0x8]\n\
-                add r3, r9\n\
-                str r3, [sp, 0x10]\n\
-                cmp r5, r8\n\
-                bcs _081D241E\n\
-                adds r3, r2, r6\n\
-                asrs r1, r4, 10\n\
-                asrs r0, r4, 9\n\
-                movs r2, 0x1\n\
-                ands r0, r2\n\
-                adds r1, r0\n\
-                add r1, r9\n\
-                strh r1, [r3]\n\
-                b _081D2414\n\
-            _081D23F2:\n\
-                ldr r0, [sp, 0xC]\n\
-                adds r4, r0\n\
-                adds r6, 0x4\n\
-                adds r0, r5, 0x1\n\
-                lsls r0, 16\n\
-                lsrs r5, r0, 16\n\
-                cmp r5, r8\n\
-                bcs _081D241E\n\
-                mov r1, r12\n\
-                adds r3, r1, r6\n\
-                asrs r2, r4, 10\n\
-                asrs r0, r4, 9\n\
-                movs r1, 0x1\n\
-                ands r0, r1\n\
-                adds r2, r0\n\
-                add r2, r9\n\
-                strh r2, [r3]\n\
-            _081D2414:\n\
-                ldr r0, =0x00026bff\n\
-                cmp r4, r0\n\
-                bgt _081D23F2\n\
-                movs r0, 0x9B\n\
-                strh r0, [r3]\n\
-            _081D241E:\n\
-                mov r2, r10\n\
-                adds r1, r2, r5\n\
-                ldr r3, [sp]\n\
-                movs r2, 0xD4\n\
-                lsls r2, 2\n\
-                adds r0, r3, r2\n\
-                strh r1, [r0]\n\
-                ldrh r0, [r0]\n\
-                subs r0, 0x38\n\
-                lsls r0, 2\n\
-                adds r7, r0\n\
-                cmp r5, r8\n\
-                bcs _081D245A\n\
-                mov r3, r12\n\
-                movs r6, 0x1\n\
-            _081D243C:\n\
-                adds r2, r3, r7\n\
-                asrs r1, r4, 10\n\
-                asrs r0, r4, 9\n\
-                ands r0, r6\n\
-                adds r1, r0\n\
-                add r1, r9\n\
-                strh r1, [r2]\n\
-                ldr r0, [sp, 0xC]\n\
-                adds r4, r0\n\
-                adds r7, 0x4\n\
-                adds r0, r5, 0x1\n\
-                lsls r0, 16\n\
-                lsrs r5, r0, 16\n\
-                cmp r5, r8\n\
-                bcc _081D243C\n\
-            _081D245A:\n\
-                subs r0, r7, 0x4\n\
-                b _081D248C\n\
-                .pool\n\
-            _081D2464:\n\
-                ldr r1, [sp]\n\
-                movs r2, 0xD4\n\
-                lsls r2, 2\n\
-                adds r0, r1, r2\n\
-                mov r3, r10\n\
-                strh r3, [r0]\n\
-                mov r0, r10\n\
-                subs r0, 0x38\n\
-                lsls r0, 2\n\
-                adds r6, r0\n\
-                adds r7, r0\n\
-                ldrh r0, [r5]\n\
-                adds r0, 0x1\n\
-                strh r0, [r6, 0x2]\n\
-                ldr r1, [sp, 0x4]\n\
-                ldrh r0, [r1]\n\
-                strh r0, [r7]\n\
-                movs r0, 0x9B\n\
-                strh r0, [r7, 0x2]\n\
-                b _081D2494\n\
-            _081D248C:\n\
-                add r0, r12\n\
-                mov r2, sp\n\
-                ldrh r2, [r2, 0x10]\n\
-                strh r2, [r0]\n\
-            _081D2494:\n\
-                add sp, 0x18\n\
-                pop {r3-r5}\n\
-                mov r8, r3\n\
-                mov r9, r4\n\
-                mov r10, r5\n\
-                pop {r4-r7}\n\
-                pop {r0}\n\
-                bx r0\n\
-    ");
+    asm_unified("\n"
+                "\tpush {r4-r7,lr}\n"
+                "\tmov r7, r10\n"
+                "\tmov r6, r9\n"
+                "\tmov r5, r8\n"
+                "\tpush {r5-r7}\n"
+                "\tsub sp, 0x18\n"
+                "\tstr r0, [sp]\n"
+                "\tadds r6, r1, 0\n"
+                "\tadds r5, r2, 0\n"
+                "\tstr r3, [sp, 0x4]\n"
+                "\tldr r0, [sp, 0x38]\n"
+                "\tldr r7, [sp, 0x3C]\n"
+                "\tlsls r0, 24\n"
+                "\tlsrs r0, 24\n"
+                "\tmov r9, r0\n"
+                "\tmovs r0, 0\n"
+                "\tstr r0, [sp, 0xC]\n"
+                "\tldrh r0, [r5, 0x2]\n"
+                "\tldrh r1, [r3, 0x2]\n"
+                "\tcmp r0, r1\n"
+                "\tbcs _081D22B2\n"
+                "\tadds r2, r0, 0\n"
+                "\tmov r10, r2\n"
+                "\tldrh r0, [r3, 0x2]\n"
+                "\tldrh r1, [r5]\n"
+                "\tlsls r4, r1, 10\n"
+                "\tldrh r3, [r3]\n"
+                "\tstr r3, [sp, 0x8]\n"
+                "\tb _081D22C6\n"
+                "_081D22B2:\n"
+                "\tldrh r0, [r5, 0x2]\n"
+                "\tldr r1, [sp, 0x4]\n"
+                "\tldrh r1, [r1, 0x2]\n"
+                "\tmov r10, r1\n"
+                "\tldr r2, [sp, 0x4]\n"
+                "\tldrh r1, [r2]\n"
+                "\tlsls r4, r1, 10\n"
+                "\tldrh r3, [r5]\n"
+                "\tstr r3, [sp, 0x8]\n"
+                "\tmov r2, r10\n"
+                "_081D22C6:\n"
+                "\tsubs r0, r2\n"
+                "\tlsls r0, 16\n"
+                "\tlsrs r0, 16\n"
+                "\tmov r8, r0\n"
+                "\tcmp r0, 0\n"
+                "\tbeq _081D22DE\n"
+                "\tsubs r0, r3, r1\n"
+                "\tlsls r0, 10\n"
+                "\tmov r1, r8\n"
+                "\tbl __divsi3\n"
+                "\tstr r0, [sp, 0xC]\n"
+                "_081D22DE:\n"
+                "\tmov r0, r8\n"
+                "\tadds r0, 0x1\n"
+                "\tlsls r0, 16\n"
+                "\tlsrs r0, 16\n"
+                "\tmov r8, r0\n"
+                "\tcmp r7, 0\n"
+                "\tbne _081D2328\n"
+                "\tmov r0, r10\n"
+                "\tsubs r0, 0x38\n"
+                "\tlsls r0, 2\n"
+                "\tadds r6, r0\n"
+                "\tmovs r5, 0\n"
+                "\tmov r3, r9\n"
+                "\tlsls r3, 1\n"
+                "\tmov r12, r3\n"
+                "\tldr r0, [sp, 0x8]\n"
+                "\tadd r0, r9\n"
+                "\tstr r0, [sp, 0x10]\n"
+                "\tcmp r7, r8\n"
+                "\tbcs _081D23B6\n"
+                "\tmovs r7, 0x1\n"
+                "_081D2308:\n"
+                "\tadds r2, r3, r6\n"
+                "\tasrs r1, r4, 10\n"
+                "\tasrs r0, r4, 9\n"
+                "\tands r0, r7\n"
+                "\tadds r1, r0\n"
+                "\tadd r1, r9\n"
+                "\tstrh r1, [r2]\n"
+                "\tldr r1, [sp, 0xC]\n"
+                "\tadds r4, r1\n"
+                "\tadds r6, 0x4\n"
+                "\tadds r0, r5, 0x1\n"
+                "\tlsls r0, 16\n"
+                "\tlsrs r5, r0, 16\n"
+                "\tcmp r5, r8\n"
+                "\tbcc _081D2308\n"
+                "\tb _081D23B6\n"
+                "_081D2328:\n"
+                "\tldr r2, [sp, 0xC]\n"
+                "\tcmp r2, 0\n"
+                "\tble _081D23C0\n"
+                "\tmov r0, r10\n"
+                "\tsubs r0, 0x38\n"
+                "\tlsls r0, 2\n"
+                "\tadds r7, r0\n"
+                "\tmovs r5, 0\n"
+                "\tmov r3, r9\n"
+                "\tlsls r3, 1\n"
+                "\tmov r12, r3\n"
+                "\tldr r0, [sp, 0x8]\n"
+                "\tadd r0, r9\n"
+                "\tstr r0, [sp, 0x10]\n"
+                "\tcmp r5, r8\n"
+                "\tbcs _081D237A\n"
+                "\tldr r0, =0x00026bff\n"
+                "\tcmp r4, r0\n"
+                "\tbgt _081D237A\n"
+                "\tmov r1, r12\n"
+                "\tstr r1, [sp, 0x14]\n"
+                "_081D2352:\n"
+                "\tldr r3, [sp, 0x14]\n"
+                "\tadds r2, r3, r7\n"
+                "\tasrs r1, r4, 10\n"
+                "\tasrs r0, r4, 9\n"
+                "\tmovs r3, 0x1\n"
+                "\tands r0, r3\n"
+                "\tadds r1, r0\n"
+                "\tadd r1, r9\n"
+                "\tstrh r1, [r2]\n"
+                "\tldr r0, [sp, 0xC]\n"
+                "\tadds r4, r0\n"
+                "\tadds r7, 0x4\n"
+                "\tadds r0, r5, 0x1\n"
+                "\tlsls r0, 16\n"
+                "\tlsrs r5, r0, 16\n"
+                "\tcmp r5, r8\n"
+                "\tbcs _081D237A\n"
+                "\tldr r1, =0x00026bff\n"
+                "\tcmp r4, r1\n"
+                "\tble _081D2352\n"
+                "_081D237A:\n"
+                "\tmov r2, r10\n"
+                "\tadds r1, r2, r5\n"
+                "\tldr r3, [sp]\n"
+                "\tmovs r2, 0xD4\n"
+                "\tlsls r2, 2\n"
+                "\tadds r0, r3, r2\n"
+                "\tstrh r1, [r0]\n"
+                "\tldrh r0, [r0]\n"
+                "\tsubs r0, 0x38\n"
+                "\tlsls r0, 2\n"
+                "\tadds r6, r0\n"
+                "\tcmp r5, r8\n"
+                "\tbcs _081D23B6\n"
+                "\tmov r3, r12\n"
+                "\tmovs r7, 0x1\n"
+                "_081D2398:\n"
+                "\tadds r2, r3, r6\n"
+                "\tasrs r1, r4, 10\n"
+                "\tasrs r0, r4, 9\n"
+                "\tands r0, r7\n"
+                "\tadds r1, r0\n"
+                "\tadd r1, r9\n"
+                "\tstrh r1, [r2]\n"
+                "\tldr r0, [sp, 0xC]\n"
+                "\tadds r4, r0\n"
+                "\tadds r6, 0x4\n"
+                "\tadds r0, r5, 0x1\n"
+                "\tlsls r0, 16\n"
+                "\tlsrs r5, r0, 16\n"
+                "\tcmp r5, r8\n"
+                "\tbcc _081D2398\n"
+                "_081D23B6:\n"
+                "\tsubs r0, r6, 0x4\n"
+                "\tb _081D248C\n"
+                "\t.pool\n"
+                "_081D23C0:\n"
+                "\tldr r1, [sp, 0xC]\n"
+                "\tcmp r1, 0\n"
+                "\tbge _081D2464\n"
+                "\tmov r0, r10\n"
+                "\tsubs r0, 0x38\n"
+                "\tlsls r0, 2\n"
+                "\tadds r6, r0\n"
+                "\tmovs r5, 0\n"
+                "\tmov r2, r9\n"
+                "\tlsls r2, 1\n"
+                "\tmov r12, r2\n"
+                "\tldr r3, [sp, 0x8]\n"
+                "\tadd r3, r9\n"
+                "\tstr r3, [sp, 0x10]\n"
+                "\tcmp r5, r8\n"
+                "\tbcs _081D241E\n"
+                "\tadds r3, r2, r6\n"
+                "\tasrs r1, r4, 10\n"
+                "\tasrs r0, r4, 9\n"
+                "\tmovs r2, 0x1\n"
+                "\tands r0, r2\n"
+                "\tadds r1, r0\n"
+                "\tadd r1, r9\n"
+                "\tstrh r1, [r3]\n"
+                "\tb _081D2414\n"
+                "_081D23F2:\n"
+                "\tldr r0, [sp, 0xC]\n"
+                "\tadds r4, r0\n"
+                "\tadds r6, 0x4\n"
+                "\tadds r0, r5, 0x1\n"
+                "\tlsls r0, 16\n"
+                "\tlsrs r5, r0, 16\n"
+                "\tcmp r5, r8\n"
+                "\tbcs _081D241E\n"
+                "\tmov r1, r12\n"
+                "\tadds r3, r1, r6\n"
+                "\tasrs r2, r4, 10\n"
+                "\tasrs r0, r4, 9\n"
+                "\tmovs r1, 0x1\n"
+                "\tands r0, r1\n"
+                "\tadds r2, r0\n"
+                "\tadd r2, r9\n"
+                "\tstrh r2, [r3]\n"
+                "_081D2414:\n"
+                "\tldr r0, =0x00026bff\n"
+                "\tcmp r4, r0\n"
+                "\tbgt _081D23F2\n"
+                "\tmovs r0, 0x9B\n"
+                "\tstrh r0, [r3]\n"
+                "_081D241E:\n"
+                "\tmov r2, r10\n"
+                "\tadds r1, r2, r5\n"
+                "\tldr r3, [sp]\n"
+                "\tmovs r2, 0xD4\n"
+                "\tlsls r2, 2\n"
+                "\tadds r0, r3, r2\n"
+                "\tstrh r1, [r0]\n"
+                "\tldrh r0, [r0]\n"
+                "\tsubs r0, 0x38\n"
+                "\tlsls r0, 2\n"
+                "\tadds r7, r0\n"
+                "\tcmp r5, r8\n"
+                "\tbcs _081D245A\n"
+                "\tmov r3, r12\n"
+                "\tmovs r6, 0x1\n"
+                "_081D243C:\n"
+                "\tadds r2, r3, r7\n"
+                "\tasrs r1, r4, 10\n"
+                "\tasrs r0, r4, 9\n"
+                "\tands r0, r6\n"
+                "\tadds r1, r0\n"
+                "\tadd r1, r9\n"
+                "\tstrh r1, [r2]\n"
+                "\tldr r0, [sp, 0xC]\n"
+                "\tadds r4, r0\n"
+                "\tadds r7, 0x4\n"
+                "\tadds r0, r5, 0x1\n"
+                "\tlsls r0, 16\n"
+                "\tlsrs r5, r0, 16\n"
+                "\tcmp r5, r8\n"
+                "\tbcc _081D243C\n"
+                "_081D245A:\n"
+                "\tsubs r0, r7, 0x4\n"
+                "\tb _081D248C\n"
+                "\t.pool\n"
+                "_081D2464:\n"
+                "\tldr r1, [sp]\n"
+                "\tmovs r2, 0xD4\n"
+                "\tlsls r2, 2\n"
+                "\tadds r0, r1, r2\n"
+                "\tmov r3, r10\n"
+                "\tstrh r3, [r0]\n"
+                "\tmov r0, r10\n"
+                "\tsubs r0, 0x38\n"
+                "\tlsls r0, 2\n"
+                "\tadds r6, r0\n"
+                "\tadds r7, r0\n"
+                "\tldrh r0, [r5]\n"
+                "\tadds r0, 0x1\n"
+                "\tstrh r0, [r6, 0x2]\n"
+                "\tldr r1, [sp, 0x4]\n"
+                "\tldrh r0, [r1]\n"
+                "\tstrh r0, [r7]\n"
+                "\tmovs r0, 0x9B\n"
+                "\tstrh r0, [r7, 0x2]\n"
+                "\tb _081D2494\n"
+                "_081D248C:\n"
+                "\tadd r0, r12\n"
+                "\tmov r2, sp\n"
+                "\tldrh r2, [r2, 0x10]\n"
+                "\tstrh r2, [r0]\n"
+                "_081D2494:\n"
+                "\tadd sp, 0x18\n"
+                "\tpop {r3-r5}\n"
+                "\tmov r8, r3\n"
+                "\tmov r9, r4\n"
+                "\tmov r10, r5\n"
+                "\tpop {r4-r7}\n"
+                "\tpop {r0}\n"
+                "\tbx r0");
 }
+#endif
 
 static void sub_81D24A4(struct UnknownStruct_81D1ED4 *arg0)
 {
