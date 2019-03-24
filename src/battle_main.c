@@ -5542,6 +5542,9 @@ static void HandleAction_Switch(void)
         gBattleResults.playerSwitchesCounter++;
 }
 
+#define AIItemType(battler) (*(gBattleStruct->AI_itemType + (battler) / 2))
+#define AIItemFlags(battler) (*(gBattleStruct->AI_itemFlags + ((battler) >> 1)))
+
 #ifdef NONMATCHING
 static void HandleAction_UseItem(void)
 {
@@ -5565,30 +5568,30 @@ static void HandleAction_UseItem(void)
     }
     else
     {
-        switch (*(gBattleStruct->AI_itemType + (gBattleScripting.battler = gBattlerAttacker) / 2))
+        switch (AIItemType((gBattleScripting.battler = gBattlerAttacker)))
         {
         case AI_ITEM_FULL_RESTORE:
         case AI_ITEM_HEAL_HP:
             break;
         case AI_ITEM_CURE_CONDITION:
             gBattleCommunication[MULTISTRING_CHOOSER] = 0;
-            if (gBattleStruct->AI_itemFlags[gBattlerAttacker >> 1] & 1)
+            if (AIItemFlags(gBattlerAttacker) & 1)
             {
-                if (gBattleStruct->AI_itemFlags[gBattlerAttacker >> 1] & 0x3E)
+                if (AIItemFlags(gBattlerAttacker) & 0x3E)
                     gBattleCommunication[MULTISTRING_CHOOSER] = 5;
             }
             else
             {
-                while (!(gBattleStruct->AI_itemFlags[gBattlerAttacker >> 1] & 1))
+                while (!(AIItemFlags(gBattlerAttacker) & 1))
                 {
-                    gBattleStruct->AI_itemFlags[gBattlerAttacker >> 1] >>= 1;
+                    AIItemFlags(gBattlerAttacker) >>= 1;
                     gBattleCommunication[MULTISTRING_CHOOSER]++;
                 }
             }
             break;
         case AI_ITEM_X_STAT:
             gBattleCommunication[MULTISTRING_CHOOSER] = 4;
-            if (*(gBattleStruct->AI_itemFlags + gBattlerAttacker / 2) & 0x80)
+            if (AIItemFlags(gBattlerAttacker) & 0x80)
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = 5;
             }
@@ -5597,9 +5600,9 @@ static void HandleAction_UseItem(void)
                 PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_ATK)
                 PREPARE_STRING_BUFFER(gBattleTextBuff2, 0xD2)
 
-                while (!((gBattleStruct->AI_itemFlags[gBattlerAttacker >> 1]) & 1))
+                while (!((AIItemFlags(gBattlerAttacker)) & 1))
                 {
-                    gBattleStruct->AI_itemFlags[gBattlerAttacker >> 1] >>= 1;
+                    AIItemFlags(gBattlerAttacker) >>= 1;
                     gBattleTextBuff1[2]++;
                 }
 
@@ -5615,7 +5618,7 @@ static void HandleAction_UseItem(void)
             break;
         }
 
-        gBattlescriptCurrInstr = gBattlescriptsForUsingItem[*(gBattleStruct->AI_itemType + gBattlerAttacker / 2)];
+        gBattlescriptCurrInstr = gBattlescriptsForUsingItem[AIItemType(gBattlerAttacker)];
     }
     gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
 }
